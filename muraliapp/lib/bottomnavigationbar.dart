@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:muraliapp/addproductpage.dart';
+import 'package:muraliapp/home.dart';
 
 /// This is the stateful widget that the main application instantiates.
 class BottomNavigationBarWidget extends StatefulWidget {
@@ -13,6 +14,7 @@ class BottomNavigationBarWidget extends StatefulWidget {
 class _BottomNavigation extends State<BottomNavigationBarWidget> {
   int _selectedIndex = 2;
   static const List<Widget> _widgetOptions = <Widget>[
+    HomepageWidget(),
     AddproductpageWidget(),
     Text(
       'Index 0: Home',
