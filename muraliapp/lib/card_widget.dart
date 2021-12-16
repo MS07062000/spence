@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 
 class CardWidget extends StatefulWidget {
   final String value;
-  // ignore: prefer_typing_uninitialized_variables
-  final image;
+  final String image;
   const CardWidget({Key? key, required this.value, required this.image})
       : super(key: key);
 
@@ -19,7 +18,10 @@ class _MyStatefulWidgetState extends State<CardWidget> {
     return Card(
       child: Container(
         height: 100,
-        color: Colors.white,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Row(
           children: [
             Padding(
@@ -45,7 +47,7 @@ class _MyStatefulWidgetState extends State<CardWidget> {
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   IconButton(
                       onPressed: () {},
@@ -58,7 +60,7 @@ class _MyStatefulWidgetState extends State<CardWidget> {
         ),
       ),
       elevation: 8,
-      margin: const EdgeInsets.all(10),
+      margin: const EdgeInsets.all(20),
       shadowColor: Colors.green,
       shape: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),

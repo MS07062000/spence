@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 class DatePickerWidget extends StatefulWidget {
   const DatePickerWidget({Key? key}) : super(key: key);
   @override
-  _DatePickerWidgetState createState() => _DatePickerWidgetState();
+  DatePickerWidgetState createState() => DatePickerWidgetState();
 }
 
-class _DatePickerWidgetState extends State<DatePickerWidget> {
+class DatePickerWidgetState extends State<DatePickerWidget> {
   DateTime? date;
 
   String getText() {
@@ -46,5 +46,9 @@ class _DatePickerWidgetState extends State<DatePickerWidget> {
     if (newDate == null) return;
 
     setState(() => date = newDate);
+  }
+
+  String sendtext() {
+    return getText();
   }
 }

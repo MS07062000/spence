@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:muraliapp/apptitle.dart';
-import 'package:muraliapp/bottomnavigationbar.dart';
+import 'package:muraliapp/introscreen_widget/onboardingpage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,9 +15,7 @@ class _Android1WidgetState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-        home: Scaffold(
-      appBar: AppTitleBarWidget(),
-      bottomNavigationBar: BottomNavigationBarWidget(),
-    ));
+      home: OnBoardingPage(),
+    );
   }
 }
