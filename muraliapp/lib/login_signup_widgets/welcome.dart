@@ -1,101 +1,55 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:muraliapp/login_signup_widgets/login.dart';
-import 'package:muraliapp/login_signup_widgets/signup.dart';
+import 'package:muraliapp/introscreen_widget/splash.dart';
 
-class Welcome extends StatelessWidget {
+class Welcome extends StatefulWidget {
+  const Welcome({Key? key}) : super(key: key);
+
+  @override
+  _WelcomeState createState() => _WelcomeState();
+}
+
+class _WelcomeState extends State<Welcome> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    startTime();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          // we will give media query height
-          // double.infinity make it big as my parent allows
-          // while MediaQuery make it big as per the screen
+      body: initScreen(context),
+    );
+  }
 
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height,
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
-          child: Column(
-            // even space distribution
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  const Text(
-                    "Welcome",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    "BackSlash Flutter provides extraordinary flutter tutorials. Do Subscribe! ",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.grey[700],
-                      fontSize: 15,
-                    ),
-                  )
-                ],
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height / 3,
-                decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage("assets/welcome.png"))),
-              ),
-              Column(
-                children: <Widget>[
-                  // the login button
-                  MaterialButton(
-                    minWidth: double.infinity,
-                    height: 60,
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginPage()));
-                    },
-                    // defining the shape
-                    shape: RoundedRectangleBorder(
-                        side: const BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.circular(50)),
-                    child: const Text(
-                      "Login",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-                    ),
-                  ),
-                  // creating the signup button
-                  const SizedBox(height: 20),
-                  MaterialButton(
-                    minWidth: double.infinity,
-                    height: 60,
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignupPage()));
-                    },
-                    color: Colors.orange,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50)),
-                    child: const Text(
-                      "Sign up",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 18),
-                    ),
-                  )
-                ],
-              )
-            ],
-          ),
+  startTime() async {
+    var duration = const Duration(seconds: 5);
+    return Timer(duration, route);
+  }
+
+  route() {
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => const Splash()));
+  }
+
+  initScreen(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.orange,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              child: Image.asset("assets/logo.png"),
+            ),
+            const Padding(padding: EdgeInsets.only(top: 20.0)),
+            const CircularProgressIndicator(
+              color: Colors.white,
+              strokeWidth: 1,
+            )
+          ],
         ),
       ),
     );

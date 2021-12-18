@@ -1,140 +1,193 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:muraliapp/home.dart';
 import 'package:muraliapp/login_signup_widgets/login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-class SignupPage extends StatelessWidget {
+class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
+
+  @override
+  _SignUpState createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignupPage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  late String _name, _email, _password;
+
+  checkAuthentication() async {
+    _auth.authStateChanges().listen((user) async {
+      if (user != null) {
+        Navigator.pushReplacementNamed(context, "/");
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    this.checkAuthentication();
+  }
+
+  signUp() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      try {
+        UserCredential user = await _auth.createUserWithEmailAndPassword(
+            email: _email, password: _password);
+        if (user != null) {
+          // UserUpdateInfo updateuser = UserUpdateInfo();
+          // updateuser.displayName = _name;
+          //  user.updateProfile(updateuser);
+          await _auth.currentUser!.updateDisplayName(_name);
+          // await Navigator.pushReplacementNamed(context,"/") ;
+
+        }
+      } on FirebaseAuthException catch (e) {
+        showError(e.message.toString());
+        print(e.message);
+      }
+    }
+  }
+
+  showError(String errormessage) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('ERROR'),
+            content: Text(errormessage),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'))
+            ],
+          );
+        });
+  }
+
+  Future<UserCredential> googleSignIn() async {
+    GoogleSignIn googleSignIn = GoogleSignIn();
+    GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+    if (googleUser != null) {
+      GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      if (googleAuth.idToken != null && googleAuth.accessToken != null) {
+        final AuthCredential credential = GoogleAuthProvider.credential(
+            accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+
+        final UserCredential user =
+            await _auth.signInWithCredential(credential);
+
+        await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const HomepageWidget()),
+        );
+
+        return user;
+      } else {
+        throw StateError('Missing Google Auth Token');
+      }
+    } else {
+      throw StateError('Sign in Aborted');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            size: 20,
-            color: Colors.black,
-          ),
-        ),
-      ),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 40),
-          height: MediaQuery.of(context).size.height - 50,
-          width: double.infinity,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Column(
-                children: <Widget>[
-                  const Text(
-                    "Sign up",
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    "Create an account, It's free ",
-                    style: TextStyle(fontSize: 15, color: Colors.grey[700]),
-                  )
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  inputFile(label: "Email"),
-                  inputFile(label: "Password", obscureText: true),
-                  inputFile(label: "Confirm Password ", obscureText: true),
-                ],
+              Container(
+                height: 400,
+                child: const Image(
+                  image: AssetImage("assets/login.jpg"),
+                  fit: BoxFit.contain,
+                ),
               ),
               Container(
-                padding: const EdgeInsets.only(top: 3, left: 3),
-                child: MaterialButton(
-                  minWidth: double.infinity,
-                  height: 60,
-                  onPressed: () {},
-                  color: Colors.orange,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: const Text(
-                    "Sign up",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        child: TextFormField(
+                            validator: (input) {
+                              if (input!.isEmpty) return 'Enter Name';
+                            },
+                            decoration: const InputDecoration(
+                              labelText: 'Name',
+                              prefixIcon: Icon(Icons.person),
+                            ),
+                            onSaved: (input) => _name = input.toString()),
+                      ),
+                      Container(
+                        child: TextFormField(
+                            validator: (input) {
+                              if (input!.isEmpty) return 'Enter Email';
+                            },
+                            decoration: const InputDecoration(
+                                labelText: 'Email',
+                                prefixIcon: Icon(Icons.email)),
+                            onSaved: (input) => _email = input.toString()),
+                      ),
+                      Container(
+                        child: TextFormField(
+                            validator: (input) {
+                              if (input!.length < 6) {
+                                return 'Provide Minimum 6 Character';
+                              }
+                            },
+                            decoration: const InputDecoration(
+                              labelText: 'Password',
+                              prefixIcon: Icon(Icons.lock),
+                            ),
+                            obscureText: true,
+                            onSaved: (input) => _password = input.toString()),
+                      ),
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(70, 10, 70, 10),
+                        child: ElevatedButton(
+                          onPressed: signUp,
+                          child: const Text('Sign Up',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold)),
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                            ),
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.orange),
+                          ),
+                        ),
+                      ),
+                      const Text("OR", textAlign: TextAlign.center),
+                      const SizedBox(height: 20.0),
+                      SignInButton(Buttons.Google,
+                          text: "Sign up with Google", onPressed: googleSignIn)
+                    ],
                   ),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const Text("Already have an account?"),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      textStyle: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                      ),
-                      primary: Colors.orange,
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginPage()));
-                    },
-                    child: const Text('Login'),
-                  ),
-                ],
-              )
             ],
           ),
         ),
       ),
     );
   }
-}
-
-// we will be creating a widget for text field
-Widget inputFile({label, obscureText = false}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: <Widget>[
-      Text(
-        label,
-        style: const TextStyle(
-            fontSize: 15, fontWeight: FontWeight.w400, color: Colors.black87),
-      ),
-      const SizedBox(
-        height: 5,
-      ),
-      TextField(
-        obscureText: obscureText,
-        decoration: InputDecoration(
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.grey[400]!),
-            ),
-            border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[400]!))),
-      ),
-      const SizedBox(
-        height: 10,
-      )
-    ],
-  );
 }

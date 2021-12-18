@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "273891007393",
+    "project_id": "spence-55e56",
+    "storage_bucket": "spence-55e56.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273891007393:android:edbf9f0fbe35a3ab4749e0",
+        "android_client_info": {
+          "package_name": "com.example.muraliapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "273891007393-odlpvkub0ob3chmdld6cn0q1opgr9pp3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.muraliapp",
+            "certificate_hash": "ea202f26013c350199a515e9a869327f9a297c73"
+          }
+        },
+        {
+          "client_id": "273891007393-mc31eh1u403jj2mf7ahu4eh81smd1do1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFZaG9Q8Ywd1sh4WXFf2UBF0Vv43CgCdQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "273891007393-mc31eh1u403jj2mf7ahu4eh81smd1do1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
