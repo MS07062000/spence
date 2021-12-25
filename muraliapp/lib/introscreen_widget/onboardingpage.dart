@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:muraliapp/login_signup_widgets/welcome.dart';
+import 'package:muraliapp/login_signup_widgets/login.dart';
 
 class OnBoardingPage extends StatefulWidget {
   const OnBoardingPage({Key? key}) : super(key: key);
@@ -15,7 +15,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
 
   void _onIntroEnd(context) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => Welcome()),
+      MaterialPageRoute(builder: (_) => const LoginPage()),
     );
   }
 

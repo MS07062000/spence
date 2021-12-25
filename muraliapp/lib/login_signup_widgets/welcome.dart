@@ -12,7 +12,6 @@ class Welcome extends StatefulWidget {
 class _WelcomeState extends State<Welcome> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     startTime();
   }
@@ -30,7 +29,7 @@ class _WelcomeState extends State<Welcome> {
   }
 
   route() {
-    Navigator.pushReplacement(
+    Navigator.push(
         context, MaterialPageRoute(builder: (context) => const Splash()));
   }
 
@@ -41,9 +40,7 @@ class _WelcomeState extends State<Welcome> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Container(
-              child: Image.asset("assets/logo.png"),
-            ),
+            Image.asset("assets/logo.png"),
             const Padding(padding: EdgeInsets.only(top: 20.0)),
             const CircularProgressIndicator(
               color: Colors.white,

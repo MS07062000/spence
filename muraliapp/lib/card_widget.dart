@@ -60,11 +60,11 @@ class _MyStatefulWidgetState extends State<CardWidget> {
         ),
       ),
       elevation: 8,
-      margin: const EdgeInsets.all(20),
-      shadowColor: Colors.green,
+      margin: const EdgeInsets.all(10),
+      shadowColor: Colors.orange,
       shape: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Colors.green, width: 1)),
+          borderSide: const BorderSide(color: Colors.orange, width: 1)),
     );
   }
 }

@@ -2,9 +2,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:muraliapp/home.dart';
-import 'package:muraliapp/login_signup_widgets/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:muraliapp/login_signup_widgets/login.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -17,12 +17,12 @@ class _SignUpState extends State<SignupPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  late String _name, _email, _password;
+  late String _email, _password;
 
   checkAuthentication() async {
     _auth.authStateChanges().listen((user) async {
       if (user != null) {
-        Navigator.pushReplacementNamed(context, "/");
+        Navigator.of(context).pushReplacementNamed('/home.dart');
       }
     });
   }
@@ -30,7 +30,7 @@ class _SignUpState extends State<SignupPage> {
   @override
   void initState() {
     super.initState();
-    this.checkAuthentication();
+    checkAuthentication();
   }
 
   signUp() async {
@@ -41,16 +41,10 @@ class _SignUpState extends State<SignupPage> {
         UserCredential user = await _auth.createUserWithEmailAndPassword(
             email: _email, password: _password);
         if (user != null) {
-          // UserUpdateInfo updateuser = UserUpdateInfo();
-          // updateuser.displayName = _name;
-          //  user.updateProfile(updateuser);
-          await _auth.currentUser!.updateDisplayName(_name);
-          // await Navigator.pushReplacementNamed(context,"/") ;
-
+          await _auth.currentUser!.updateEmail(_email);
         }
       } on FirebaseAuthException catch (e) {
         showError(e.message.toString());
-        print(e.message);
       }
     }
   }
@@ -86,10 +80,7 @@ class _SignUpState extends State<SignupPage> {
         final UserCredential user =
             await _auth.signInWithCredential(credential);
 
-        await Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const HomepageWidget()),
-        );
+        await Navigator.of(context).pushReplacementNamed('/home.dart');
 
         return user;
       } else {
@@ -103,57 +94,79 @@ class _SignUpState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
       body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: 400,
-                child: const Image(
-                  image: AssetImage("assets/login.jpg"),
-                  fit: BoxFit.contain,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Container(
+            color: Colors.white,
+            child: Column(
+              children: <Widget>[
+                const SizedBox(
+                  height: 200,
+                  child: Image(
+                    image: AssetImage("assets/logo2.png"),
+                    fit: BoxFit.contain,
+                  ),
                 ),
-              ),
-              Container(
-                child: Form(
+                Form(
                   key: _formKey,
                   child: Column(
                     children: <Widget>[
-                      Container(
-                        child: TextFormField(
-                            validator: (input) {
-                              if (input!.isEmpty) return 'Enter Name';
-                            },
-                            decoration: const InputDecoration(
-                              labelText: 'Name',
-                              prefixIcon: Icon(Icons.person),
+                      TextFormField(
+                          validator: (input) {
+                            if (input!.isEmpty) return 'Enter Email';
+                          },
+                          decoration: InputDecoration(
+                            labelText: 'Email',
+                            suffixIcon: const Icon(Icons.email),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 3, color: Colors.purple.shade800),
+                              borderRadius: BorderRadius.circular(15),
                             ),
-                            onSaved: (input) => _name = input.toString()),
-                      ),
-                      Container(
-                        child: TextFormField(
-                            validator: (input) {
-                              if (input!.isEmpty) return 'Enter Email';
-                            },
-                            decoration: const InputDecoration(
-                                labelText: 'Email',
-                                prefixIcon: Icon(Icons.email)),
-                            onSaved: (input) => _email = input.toString()),
-                      ),
-                      Container(
-                        child: TextFormField(
-                            validator: (input) {
-                              if (input!.length < 6) {
-                                return 'Provide Minimum 6 Character';
-                              }
-                            },
-                            decoration: const InputDecoration(
-                              labelText: 'Password',
-                              prefixIcon: Icon(Icons.lock),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  width: 3, color: Colors.orange),
+                              borderRadius: BorderRadius.circular(15),
                             ),
-                            obscureText: true,
-                            onSaved: (input) => _password = input.toString()),
-                      ),
+                            errorBorder: const OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.red, width: 3)),
+                          ),
+                          onSaved: (input) => _email = input.toString()),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                          validator: (input) {
+                            if (input!.length < 6) {
+                              return 'Provide Minimum 6 Character';
+                            }
+                          },
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                            suffixIcon: const Icon(Icons.lock),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 3, color: Colors.purple.shade800),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  width: 3, color: Colors.orange),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            errorBorder: const OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.red, width: 3)),
+                          ),
+                          obscureText: true,
+                          onSaved: (input) => _password = input.toString()),
                       const SizedBox(height: 20),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(70, 10, 70, 10),
@@ -165,26 +178,57 @@ class _SignUpState extends State<SignupPage> {
                                   fontSize: 20.0,
                                   fontWeight: FontWeight.bold)),
                           style: ButtonStyle(
+                            padding: MaterialStateProperty.all(
+                                const EdgeInsets.all(20)),
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(
                               RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
+                                borderRadius: BorderRadius.circular(10.0),
                               ),
                             ),
                             backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.orange),
+                                MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                                if (states.contains(MaterialState.pressed)) {
+                                  return Colors.green;
+                                }
+                                return Colors.orange;
+                              },
+                            ),
                           ),
                         ),
                       ),
                       const Text("OR", textAlign: TextAlign.center),
                       const SizedBox(height: 20.0),
                       SignInButton(Buttons.Google,
-                          text: "Sign up with Google", onPressed: googleSignIn)
+                          text: "Sign up with Google", onPressed: googleSignIn),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          const Text("Already have an account?"),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              textStyle: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                              ),
+                              primary: Colors.orange,
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const LoginPage()));
+                            },
+                            child: const Text('Login'),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

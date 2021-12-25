@@ -15,15 +15,14 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
   int _selectedIndex = 2;
   static const List<Widget> _widgetOptions = <Widget>[
     HomepageWidget(),
-    AddproductpageWidget(),
+    Text(
+      'Index 0: Home',
+    ),
     Text(
       'Index 0: Home',
     ),
     Text(
       'Index 1: Business',
-    ),
-    Text(
-      'Index 2: School',
     ),
     Text(
       'Index 2: School',
@@ -45,30 +44,30 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: 'Business',
+            icon: Icon(Icons.shopping_basket),
+            label: "Shopping List",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'School',
+            icon: Icon(Icons.camera_alt_sharp),
+            label: "Home",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.hourglass_top_rounded),
-            label: 'School',
+            label: "Home",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.pie_chart_outline),
-            label: 'School',
+            label: "Home",
           ),
         ],
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.white,
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.yellow,
+        selectedItemColor: Colors.orange,
         onTap: _onItemTapped,
-        unselectedItemColor: Colors.green[50],
+        unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
       ),
     );
