@@ -6,7 +6,7 @@ import 'package:muraliapp/home.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dropdownfield/dropdownfield.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class AddproductpageWidget extends StatefulWidget {
   const AddproductpageWidget({Key? key}) : super(key: key);
@@ -32,30 +32,97 @@ class _Addproduct extends State<AddproductpageWidget> {
               Navigator.pop(context);
             },
           )),
-      body: MyCustomForm(),
+      body: const MyCustomForm(),
     );
   }
 }
 
-class MyCustomForm extends StatelessWidget {
-  final formGlobalKey = GlobalKey<FormState>();
+_inputdec(String text) {
+  return InputDecoration(
+    counterText: "",
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(width: 2, color: Colors.purple.shade800),
+      borderRadius: BorderRadius.circular(15),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: const BorderSide(width: 2, color: Colors.orange),
+      borderRadius: BorderRadius.circular(15),
+    ),
+    errorBorder: const OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red, width: 2)),
+    labelText: text,
+  );
+}
+
+_inputdec2(String text, IconData text2) {
+  return InputDecoration(
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(width: 2, color: Colors.purple.shade800),
+      borderRadius: BorderRadius.circular(15),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: const BorderSide(width: 2, color: Colors.orange),
+      borderRadius: BorderRadius.circular(15),
+    ),
+    errorBorder: const OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.red, width: 2)),
+    labelText: text,
+    suffixIcon: Icon(text2),
+  );
+}
+
+class MyCustomForm extends StatefulWidget {
+  const MyCustomForm({Key? key}) : super(key: key);
+
+  @override
+  State<MyCustomForm> createState() => _MyCustomStatefulWidgetState();
+}
+
+class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
+  final _formGlobalKey = GlobalKey<FormState>();
   var date2 = "";
   var date3 = "";
-  String unit = "";
-  String category = "";
+  String unit = "Android";
+  String category = "Android";
+  final _nameofproduct = TextEditingController();
+  final _dateController1 = TextEditingController();
+  final _dateController2 = TextEditingController();
+  final _dateController3 = TextEditingController();
+  final _location = TextEditingController();
+  final _additionalinfo = TextEditingController();
+  final _quantitycontroller = TextEditingController();
+
+  void _trysubmit() async {
+    bool isvalid;
+    isvalid = _formGlobalKey.currentState!.validate();
+
+    if (isvalid) {
+      String expirydate(String datex, String datey) {
+        if (datex.isEmpty || datex == null) {
+          return datey;
+        }
+        return datex;
+      }
+
+      _formGlobalKey.currentState!.save();
+      Map<String, dynamic> data = {
+        "Name": _nameofproduct.text,
+        "Manufacturing Date": _dateController1.text,
+        "Expiry Date": expirydate(date2, date3),
+        "Quantity": _quantitycontroller.text + unit,
+        "Category": category,
+        "Location": _location.text,
+        "Additional Information": _additionalinfo.text,
+      };
+      FirebaseFirestore.instance.collection("test").add(data);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final _nameofproduct = TextEditingController();
-    final _dateController1 = TextEditingController();
-    final _dateController2 = TextEditingController();
-    final _dateController3 = TextEditingController();
-    final _unit1 = TextEditingController();
-    final _category1 = TextEditingController();
-    final _location = TextEditingController();
-    final _additionalinfo = TextEditingController();
     return SingleChildScrollView(
       child: Form(
-        key: formGlobalKey,
+        key: _formGlobalKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -64,21 +131,7 @@ class MyCustomForm extends StatelessWidget {
               child: TextFormField(
                 keyboardType: TextInputType.text,
                 maxLength: 20,
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(width: 3, color: Colors.purple.shade800),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        const BorderSide(width: 3, color: Colors.orange),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  errorBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red, width: 3)),
-                  labelText: 'Enter name of product',
-                ),
+                decoration: _inputdec("Enter name of product"),
                 controller: _nameofproduct,
                 validator: (name) {
                   if (name == null || name.isEmpty) {
@@ -95,22 +148,8 @@ class MyCustomForm extends StatelessWidget {
                 child: TextFormField(
                   readOnly: true,
                   controller: _dateController1,
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(width: 3, color: Colors.purple.shade800),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(width: 3, color: Colors.orange),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    errorBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red, width: 3)),
-                    labelText: 'Manufacturing Date',
-                    suffixIcon: const Icon(Icons.calendar_today),
-                  ),
+                  decoration:
+                      _inputdec2('Manufacturing Date', Icons.calendar_today),
                   onTap: () async {
                     await showDatePicker(
                       context: context,
@@ -140,22 +179,7 @@ class MyCustomForm extends StatelessWidget {
                 child: TextFormField(
                   readOnly: true,
                   controller: _dateController2,
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(width: 3, color: Colors.purple.shade800),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(width: 3, color: Colors.orange),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    errorBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red, width: 3)),
-                    labelText: 'Expiry Date',
-                    suffixIcon: const Icon(Icons.calendar_today),
-                  ),
+                  decoration: _inputdec2('Expiry Date', Icons.calendar_today),
                   onTap: () async {
                     await showDatePicker(
                       context: context,
@@ -205,22 +229,7 @@ class MyCustomForm extends StatelessWidget {
                 child: TextFormField(
                   readOnly: true,
                   controller: _dateController3,
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(width: 3, color: Colors.purple.shade800),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(width: 3, color: Colors.orange),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    errorBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red, width: 3)),
-                    labelText: 'Best Before',
-                    suffixIcon: const Icon(Icons.calendar_today),
-                  ),
+                  decoration: _inputdec2('Best Before', Icons.calendar_today),
                   onTap: () async {
                     await showMonthPicker(
                       context: context,
@@ -253,52 +262,49 @@ class MyCustomForm extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.50,
-                          child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            maxLength: 100,
-                            decoration: InputDecoration(
-                              labelText: 'Quantity',
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 3, color: Colors.purple.shade800),
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    width: 3, color: Colors.orange),
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              errorBorder: const OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.red, width: 3)),
-                            ),
-                          ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.50,
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          maxLength: 100,
+                          decoration: _inputdec("Quantity"),
+                          controller: _quantitycontroller,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  Expanded(
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
                     child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.50,
-                      child: DropDownField(
-                        controller: _unit1,
-                        hintText: "unit",
-                        enabled: true,
-                        items: const [
-                          'Categories 1',
-                          'Categories 2',
-                          'Categories 3',
-                          'Categories 4'
-                        ],
-                        onValueChanged: (value) {
-                          unit = value;
-                        },
+                      width: MediaQuery.of(context).size.width * 0.1,
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButtonFormField<String>(
+                          decoration: _inputdec("unit"),
+                          value: unit,
+                          style: const TextStyle(color: Colors.black),
+                          items: <String>[
+                            'Android',
+                            'IOS',
+                            'Flutter',
+                            'Node',
+                            'Java',
+                            'Python',
+                            'PHP',
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              unit = value!;
+                            });
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -309,67 +315,53 @@ class MyCustomForm extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.50,
-                child: DropDownField(
-                  controller: _category1,
-                  hintText: "Select a category",
-                  enabled: true,
-                  items: const [
-                    'Categories 1',
-                    'Categories 2',
-                    'Categories 3',
-                    'Categories 4'
-                  ],
-                  onValueChanged: (value) {
-                    category = value;
-                  },
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButtonFormField<String>(
+                    decoration: _inputdec("Category"),
+                    value: category,
+                    hint: const Text(
+                      "Select Item Type",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    style: const TextStyle(color: Colors.black),
+                    items: <String>[
+                      'Android',
+                      'IOS',
+                      'Flutter',
+                      'Node',
+                      'Java',
+                      'Python',
+                      'PHP',
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? value) {
+                      setState(() {
+                        category = value!;
+                      });
+                    },
+                  ),
                 ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
-                keyboardType: TextInputType.text,
-                maxLength: 20,
-                controller: _location,
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(width: 3, color: Colors.purple.shade800),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        const BorderSide(width: 3, color: Colors.orange),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  errorBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red, width: 3)),
-                  labelText: 'Location',
-                ),
-              ),
+                  keyboardType: TextInputType.text,
+                  maxLength: 20,
+                  controller: _location,
+                  decoration: _inputdec("Location")),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
-                keyboardType: TextInputType.text,
-                maxLength: 50,
-                controller: _additionalinfo,
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(width: 3, color: Colors.purple.shade800),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        const BorderSide(width: 3, color: Colors.orange),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  errorBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red, width: 3)),
-                  labelText: 'Additional Information',
-                ),
-              ),
+                  keyboardType: TextInputType.text,
+                  maxLength: 50,
+                  controller: _additionalinfo,
+                  decoration: _inputdec("Additional Information")),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -377,7 +369,7 @@ class MyCustomForm extends StatelessWidget {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _trysubmit,
                   child: const Text(
                     'Add Product',
                     style: TextStyle(color: Colors.white, fontSize: 20),

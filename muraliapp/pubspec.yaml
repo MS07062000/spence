@@ -31,7 +31,6 @@ dependencies:
     sdk: flutter
 
   syncfusion_flutter_datepicker: ^19.3.54
-  dropdownfield: ^1.0.3
   month_picker_dialog: ^0.4.0
    # add flutter_ScreenUtil
   flutter_screenutil: ^0.4.2
