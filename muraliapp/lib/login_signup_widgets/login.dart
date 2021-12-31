@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:muraliapp/login_signup_widgets/reset.dart';
 import 'package:muraliapp/login_signup_widgets/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:muraliapp/home.dart';
+import 'package:email_validator/email_validator.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -91,9 +93,10 @@ class _LoginState extends State<LoginPage> {
                     child: Column(
                       children: <Widget>[
                         TextFormField(
-                            validator: (input) {
-                              if (input!.isEmpty) return 'Enter Email';
-                            },
+                            validator: (input) =>
+                                input != null && !EmailValidator.validate(input)
+                                    ? 'Enter a valid email'
+                                    : null,
                             decoration: InputDecoration(
                               labelText: 'Email',
                               suffixIcon: const Icon(Icons.email),
@@ -168,6 +171,28 @@ class _LoginState extends State<LoginPage> {
                               ),
                             ),
                           ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                textStyle: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15,
+                                ),
+                                primary: Colors.orange,
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ResetScreen()));
+                              },
+                              child: const Text('Forget Password ?'),
+                            ),
+                          ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,

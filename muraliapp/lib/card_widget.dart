@@ -4,14 +4,18 @@ import 'package:flutter/material.dart';
 class CardWidget extends StatefulWidget {
   final String value;
   final String image;
-  const CardWidget({Key? key, required this.value, required this.image})
+  final screen_name;
+  const CardWidget(
+      {Key? key,
+      required this.value,
+      required this.image,
+      required this.screen_name})
       : super(key: key);
 
   @override
   _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
 }
 
-/// This is the private State class that goes with MyStatefulWidget.
 class _MyStatefulWidgetState extends State<CardWidget> {
   @override
   Widget build(BuildContext context) {
@@ -50,7 +54,12 @@ class _MyStatefulWidgetState extends State<CardWidget> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => widget.screen_name));
+                      },
                       icon: const Icon(Icons.arrow_right_alt_rounded)),
                 ],
               ),

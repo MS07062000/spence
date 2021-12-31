@@ -1,12 +1,16 @@
 import 'dart:core';
+import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:muraliapp/dropdownbutton.dart';
-import 'package:muraliapp/home.dart';
+import 'package:muraliapp/global_method.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class AddproductpageWidget extends StatefulWidget {
   const AddproductpageWidget({Key? key}) : super(key: key);
@@ -79,11 +83,13 @@ class MyCustomForm extends StatefulWidget {
 }
 
 class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
+  String? _pickedImage;
+  late String url;
   final _formGlobalKey = GlobalKey<FormState>();
   var date2 = "";
   var date3 = "";
   String unit = "Android";
-  String category = "Android";
+  String category = "Bakery";
   final _nameofproduct = TextEditingController();
   final _dateController1 = TextEditingController();
   final _dateController2 = TextEditingController();
@@ -91,6 +97,10 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
   final _location = TextEditingController();
   final _additionalinfo = TextEditingController();
   final _quantitycontroller = TextEditingController();
+  final GlobalMethods _globalMethods = GlobalMethods();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool _isLoading = false;
+  final ImagePicker _picker = ImagePicker();
 
   void _trysubmit() async {
     bool isvalid;
@@ -104,18 +114,94 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
         return datex;
       }
 
-      _formGlobalKey.currentState!.save();
-      Map<String, dynamic> data = {
-        "Name": _nameofproduct.text,
-        "Manufacturing Date": _dateController1.text,
-        "Expiry Date": expirydate(date2, date3),
-        "Quantity": _quantitycontroller.text + unit,
-        "Category": category,
-        "Location": _location.text,
-        "Additional Information": _additionalinfo.text,
-      };
-      FirebaseFirestore.instance.collection("test").add(data);
+      try {
+        if (_pickedImage == null) {
+          _globalMethods.authErrorHandle('Please pick an image', context);
+        } else {
+          setState(() {
+            _isLoading = true;
+          });
+          final ref = FirebaseStorage.instance
+              .ref()
+              .child('usersImages')
+              .child(_nameofproduct.text + '.jpg');
+          await ref.putFile(File(_pickedImage!));
+          url = await ref.getDownloadURL();
+          final User? user = _auth.currentUser;
+          final _uid = user!.uid;
+
+          _formGlobalKey.currentState!.save();
+          Map<String, dynamic> data = {
+            "Name": _nameofproduct.text,
+            "Manufacturing Date": _dateController1.text,
+            "Expiry Date": expirydate(date2, date3),
+            "Quantity": _quantitycontroller.text + unit,
+            'Product Image': url,
+            "Category": category,
+            "Location": _location.text,
+            "Additional Information": _additionalinfo.text,
+          };
+          FirebaseFirestore.instance.collection("users").doc(_uid).set(data);
+          Navigator.canPop(context) ? Navigator.pop(context) : null;
+          //_formGlobalKey.currentState!.reset();
+
+        }
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
+  }
+
+  Future _selectPhoto() async {
+    await showModalBottomSheet(
+        context: context,
+        builder: (context) => BottomSheet(
+              builder: (context) => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                      leading: const Icon(Icons.camera),
+                      title: const Text('Camera'),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        _pickImage(ImageSource.camera);
+                      }),
+                  ListTile(
+                      leading: const Icon(Icons.filter),
+                      title: const Text('Pick a file'),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        _pickImage(ImageSource.gallery);
+                      }),
+                ],
+              ),
+              onClosing: () {},
+            ));
+  }
+
+  Future _pickImage(ImageSource source) async {
+    final pickedFile =
+        await _picker.pickImage(source: source, imageQuality: 50);
+    if (pickedFile == null) {
+      return;
+    }
+
+    var file = await ImageCropper.cropImage(
+        sourcePath: pickedFile.path,
+        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1));
+    if (file == null) {
+      return;
+    }
+
+    //file = await compressImagePath(file.path, 35);
+
+    //await _uploadFile(file.path);
+    setState(() {
+      _pickedImage = File(file.path) as String?;
+    });
+    //Navigator.pop(context);
   }
 
   @override
@@ -126,6 +212,40 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (_pickedImage == null)
+                  Icon(Icons.image,
+                      size: 60, color: Theme.of(context).primaryColor),
+                if (_pickedImage != null)
+                  InkWell(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    onTap: () => _selectPhoto(),
+                    child: ClipRect(
+                      child: Image(
+                        image: NetworkImage(_pickedImage!),
+                        height: 80,
+                        width: 80,
+                      ),
+                    ),
+                  ),
+                InkWell(
+                  onTap: () => _selectPhoto(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      _pickedImage != null ? 'Change photo' : 'Select photo',
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                )
+              ],
+            ),
             Padding(
               padding: const EdgeInsets.all(10),
               child: TextFormField(
@@ -325,13 +445,11 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                     ),
                     style: const TextStyle(color: Colors.black),
                     items: <String>[
-                      'Android',
-                      'IOS',
-                      'Flutter',
-                      'Node',
-                      'Java',
-                      'Python',
-                      'PHP',
+                      'Bakery',
+                      'Dairy',
+                      'Medicine',
+                      'Frozen Food',
+                      'Others',
                     ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,

@@ -5,6 +5,7 @@ import 'package:muraliapp/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:muraliapp/login_signup_widgets/login.dart';
+import 'package:email_validator/email_validator.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -120,9 +121,10 @@ class _SignUpState extends State<SignupPage> {
                   child: Column(
                     children: <Widget>[
                       TextFormField(
-                          validator: (input) {
-                            if (input!.isEmpty) return 'Enter Email';
-                          },
+                          validator: (input) =>
+                              input != null && !EmailValidator.validate(input)
+                                  ? 'Enter a valid email'
+                                  : null,
                           decoration: InputDecoration(
                             labelText: 'Email',
                             suffixIcon: const Icon(Icons.email),

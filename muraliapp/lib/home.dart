@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:muraliapp/addproductpage.dart';
 import 'package:muraliapp/bottomnavigationbar.dart';
 import 'package:muraliapp/card_widget.dart';
+import 'package:muraliapp/categories_widget/bakery_screen.dart';
+import 'package:muraliapp/categories_widget/dairy_screen.dart';
+import 'package:muraliapp/categories_widget/frozen_food_screen.dart';
+import 'package:muraliapp/categories_widget/medicine_screen.dart';
+import 'package:muraliapp/categories_widget/others.dart';
 import 'package:muraliapp/login_signup_widgets/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -86,11 +91,31 @@ class MyCustomForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: const [
-        CardWidget(value: "Bakery", image: 'assets/bakery 1.png'),
-        CardWidget(value: "Dairy", image: 'assets/dairy 1.png'),
-        CardWidget(value: "Medicine", image: 'assets/pills 1.png'),
-        CardWidget(value: "Frozen Food", image: 'assets/frozen-food 1.png'),
-        CardWidget(value: "Others", image: 'assets/bakery.png'),
+        CardWidget(
+          value: "Bakery",
+          image: 'assets/bakery 1.png',
+          screen_name: BakeryWidget(),
+        ),
+        CardWidget(
+          value: "Dairy",
+          image: 'assets/dairy 1.png',
+          screen_name: DairyWidget(),
+        ),
+        CardWidget(
+          value: "Medicine",
+          image: 'assets/pills 1.png',
+          screen_name: MedicineWidget(),
+        ),
+        CardWidget(
+          value: "Frozen Food",
+          image: 'assets/frozen-food 1.png',
+          screen_name: FrozenFoodWidget(),
+        ),
+        CardWidget(
+          value: "Others",
+          image: 'assets/bakery.png',
+          screen_name: OthersWidget(),
+        ),
       ],
     );
   }

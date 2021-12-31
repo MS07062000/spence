@@ -31,11 +31,8 @@ dependencies:
     sdk: flutter
 
   syncfusion_flutter_datepicker: ^19.3.54
+  email_validator: ^2.0.1
   month_picker_dialog: ^0.4.0
-   # add flutter_ScreenUtil
-  flutter_screenutil: ^0.4.2
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   introduction_screen: ^2.1.0
   shared_preferences: ^2.0.11
@@ -45,6 +42,9 @@ dependencies:
   google_sign_in: ^5.2.1
   firebase_core: ^1.10.6
   cloud_firestore: ^3.1.5
+  image_picker: ^0.8.4+4
+  image_cropper: ^1.4.1
+  firebase_storage: ^10.2.4
 
   
   
