@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:muraliapp/bottomnavigationbar.dart';
 import 'package:muraliapp/categories_widget/card2.dart';
 
 class MedicineWidget extends StatefulWidget {

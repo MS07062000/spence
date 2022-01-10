@@ -46,8 +46,6 @@ dependencies:
   image_cropper: ^1.4.1
   firebase_storage: ^10.2.4
 
-  
-  
 
 dev_dependencies:
   flutter_test:
