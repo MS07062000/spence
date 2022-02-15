@@ -1,6 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:muraliapp/addproductpage.dart';
-import 'package:muraliapp/bottomnavigationbar.dart';
 import 'package:muraliapp/card_widget.dart';
 import 'package:muraliapp/categories_widget/bakery_screen.dart';
 import 'package:muraliapp/categories_widget/dairy_screen.dart';
@@ -67,6 +67,19 @@ class _Homepage extends State<HomepageWidget> {
       appBar: AppBar(
         title: const Text('Spence'),
         backgroundColor: Colors.orange,
+        actions: <Widget>[
+          Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () async {
+                  await signOut();
+                },
+                child: const Icon(
+                  Icons.logout,
+                  size: 26.0,
+                ),
+              )),
+        ],
       ),
       body: const MyCustomForm(),
       floatingActionButton: FloatingActionButton(
@@ -86,35 +99,124 @@ class _Homepage extends State<HomepageWidget> {
 
 class MyCustomForm extends StatelessWidget {
   const MyCustomForm({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return ListView(
-      children: const [
+      children: [
         CardWidget(
           value: "Bakery",
           image: 'assets/bakery 1.png',
-          screen_name: BakeryWidget(),
+          screen_name: const BakeryWidget(),
+          num: FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .collection("user_orders")
+                  .where('Category', isEqualTo: "Bakery")
+                  .snapshots()
+                  .length
+                  .toString()
+                  .isEmpty
+              ? 0.toString()
+              : FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .collection("user_orders")
+                  .where('Category', isEqualTo: "Bakery")
+                  .snapshots()
+                  .length
+                  .toString(),
         ),
         CardWidget(
           value: "Dairy",
           image: 'assets/dairy 1.png',
-          screen_name: DairyWidget(),
+          screen_name: const DairyWidget(),
+          num: FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .collection("user_orders")
+                  .where('Category', isEqualTo: "Dairy")
+                  .snapshots()
+                  .length
+                  .toString()
+                  .isEmpty
+              ? 0.toString()
+              : FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .collection("user_orders")
+                  .where('Category', isEqualTo: "Dairy")
+                  .snapshots()
+                  .length
+                  .toString(),
         ),
         CardWidget(
           value: "Medicine",
           image: 'assets/pills 1.png',
-          screen_name: MedicineWidget(),
+          screen_name: const MedicineWidget(),
+          num: FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .collection("user_orders")
+                  .where('Category', isEqualTo: "Medicine")
+                  .snapshots()
+                  .length
+                  .toString()
+                  .isEmpty
+              ? 0.toString()
+              : FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .collection("user_orders")
+                  .where('Category', isEqualTo: "Medicine")
+                  .snapshots()
+                  .length
+                  .toString(),
         ),
         CardWidget(
           value: "Frozen Food",
           image: 'assets/frozen-food 1.png',
-          screen_name: FrozenFoodWidget(),
+          screen_name: const FrozenFoodWidget(),
+          num: FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .collection("user_orders")
+                  .where('Category', isEqualTo: "Frozen Food")
+                  .snapshots()
+                  .length
+                  .toString()
+                  .isEmpty
+              ? 0.toString()
+              : FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .collection("user_orders")
+                  .where('Category', isEqualTo: "Frozen Food")
+                  .snapshots()
+                  .length
+                  .toString(),
         ),
         CardWidget(
           value: "Others",
           image: 'assets/bakery.png',
-          screen_name: OthersWidget(),
+          screen_name: const OthersWidget(),
+          num: FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .collection("user_orders")
+                  .where('Category', isEqualTo: "Others")
+                  .snapshots()
+                  .length
+                  .toString()
+                  .isEmpty
+              ? 0.toString()
+              : FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .collection("user_orders")
+                  .where('Category', isEqualTo: "Others")
+                  .snapshots()
+                  .length
+                  .toString(),
         ),
       ],
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:muraliapp/addproductpage.dart';
+import 'package:muraliapp/expiringsoon.dart';
 import 'package:muraliapp/home.dart';
 
 /// This is the stateful widget that the main application instantiates.
@@ -12,7 +13,7 @@ class BottomNavigationBarWidget extends StatefulWidget {
 
 /// This is the private State class that goes with Bottom_navigation_bar_widget.
 class _BottomNavigation extends State<BottomNavigationBarWidget> {
-  int _selectedIndex = 2;
+  int _selectedIndex = 0;
   static const List<Widget> _widgetOptions = <Widget>[
     HomepageWidget(),
     Text(
@@ -21,9 +22,7 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
     Text(
       'Index 0: Home',
     ),
-    Text(
-      'Index 1: Business',
-    ),
+    ExpiringsoonpageWidget(),
     Text(
       'Index 2: School',
     ),

@@ -57,29 +57,6 @@ class _Homepage extends State<Homepage2Widget> {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Spence',
-      home: Home(),
-    );
-  }
-}
-
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
-
-  @override
-  State createState() {
-    return _HomeState();
-  }
-}
-
-class _HomeState extends State {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Spence'),
-        ),
-        bottomNavigationBar: const BottomNavigationBarWidget());
+    return const BottomNavigationBarWidget();
   }
 }

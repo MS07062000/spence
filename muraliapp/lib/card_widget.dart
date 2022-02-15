@@ -5,12 +5,14 @@ class CardWidget extends StatefulWidget {
   final String value;
   final String image;
   final screen_name;
-  const CardWidget(
-      {Key? key,
-      required this.value,
-      required this.image,
-      required this.screen_name})
-      : super(key: key);
+  final String num;
+  const CardWidget({
+    Key? key,
+    required this.value,
+    required this.image,
+    required this.screen_name,
+    required this.num,
+  }) : super(key: key);
 
   @override
   _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
@@ -30,10 +32,7 @@ class _MyStatefulWidgetState extends State<CardWidget> {
           children: [
             Padding(
               padding: const EdgeInsets.all(10),
-              child: Expanded(
-                child: Image.asset(widget.image, fit: BoxFit.cover),
-                flex: 2,
-              ),
+              child: Image.asset(widget.image, fit: BoxFit.cover),
             ),
             Expanded(
               child: Column(
@@ -42,7 +41,7 @@ class _MyStatefulWidgetState extends State<CardWidget> {
                 children: [
                   ListTile(
                     title: Text(widget.value),
-                    subtitle: const Text("Number Items"),
+                    subtitle: Text(widget.num + " Items"),
                   ),
                 ],
               ),

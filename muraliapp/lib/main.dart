@@ -7,10 +7,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: const FirebaseOptions(
-      apiKey: "AIzaSyDFZaG9Q8Ywd1sh4WXFf2UBF0Vv43CgCdQ",
-      appId: "1:273891007393:android:edbf9f0fbe35a3ab4749e0",
-      messagingSenderId: "273891007393",
-      projectId: "spence-55e56",
+      apiKey: "AIzaSyCwGW_iu-B2JYtq9EhZuUX3idQRWdm5fug",
+      appId: "1:801106562107:android:c34c9e0ba79cb25977201e",
+      messagingSenderId: "801106562107",
+      projectId: "spence-38472",
     ),
   );
   runApp(const MyApp());

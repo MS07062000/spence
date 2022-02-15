@@ -69,10 +69,11 @@ class _SignUpState extends State<SignupPage> {
   }
 
   Future<UserCredential> googleSignIn() async {
-    GoogleSignIn googleSignIn = GoogleSignIn();
-    GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
     if (googleUser != null) {
-      GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       if (googleAuth.idToken != null && googleAuth.accessToken != null) {
         final AuthCredential credential = GoogleAuthProvider.credential(

@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 
 class Card2Widget extends StatefulWidget {
   final String name;
-  final String date;
+  final int date;
   final String quantity;
   final String image;
   const Card2Widget({
@@ -28,14 +28,11 @@ class _MyCardWidgetState extends State<Card2Widget> {
         color: Colors.white,
         child: Row(
           children: [
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width * 0.25,
               child: Padding(
                 padding: const EdgeInsets.all(10),
-                child: Expanded(
-                  child: Image.asset(widget.image, fit: BoxFit.cover),
-                  flex: 2,
-                ),
+                child: Image.network(widget.image, fit: BoxFit.cover),
               ),
             ),
             Expanded(
@@ -54,7 +51,7 @@ class _MyCardWidgetState extends State<Card2Widget> {
                       ),
                     ),
                     Text(
-                      "Expires in" + widget.date + "days",
+                      "Expires in " + widget.date.toString() + " days",
                       style: const TextStyle(color: Colors.red),
                     ),
                     Text(
@@ -65,23 +62,21 @@ class _MyCardWidgetState extends State<Card2Widget> {
                 ),
               ),
             ),
-            Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  IconButton(
-                    color: Colors.orange,
-                    onPressed: () {},
-                    icon: const Icon(Icons.menu),
-                  ),
-                  IconButton(
-                    color: Colors.orange,
-                    onPressed: () {},
-                    icon: const Icon(Icons.find_replace_sharp),
-                  )
-                ],
-              ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                IconButton(
+                  color: Colors.orange,
+                  onPressed: () {},
+                  icon: const Icon(Icons.menu),
+                ),
+                IconButton(
+                  color: Colors.orange,
+                  onPressed: () {},
+                  icon: const Icon(Icons.find_replace_sharp),
+                )
+              ],
             ),
           ],
         ),

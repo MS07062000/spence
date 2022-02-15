@@ -11,6 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:muraliapp/home2.dart';
 
 class AddproductpageWidget extends StatefulWidget {
   const AddproductpageWidget({Key? key}) : super(key: key);
@@ -29,7 +30,11 @@ class _Addproduct extends State<AddproductpageWidget> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const Homepage2Widget()),
+              );
             },
           )),
       body: const MyCustomForm(),
@@ -82,7 +87,6 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
   File? _pickedImage;
   String? url;
   final _formGlobalKey = GlobalKey<FormState>();
-  bool _isLoading = false;
   var date2 = "";
   var date3 = "";
   String unit = "Android";
@@ -96,6 +100,9 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
   final _quantitycontroller = TextEditingController();
   final GlobalMethods _globalMethods = GlobalMethods();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  late DateTime day1;
+  DateTime? day2;
+  DateTime? day3;
 
   void _trysubmit() async {
     bool isvalid;
@@ -103,19 +110,35 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
 
     if (isvalid) {
       String expirydate(String datex, String datey) {
-        if (datex.isEmpty || datex == null) {
+        if (datex.isEmpty) {
           return datey;
         }
         return datex;
+      }
+
+      // ignore: non_constant_identifier_names
+      int days_calculation(DateTime day1, DateTime expirydate1) {
+        day1 = DateTime(day1.year, day1.month, day1.day);
+        expirydate1 =
+            DateTime(expirydate1.year, expirydate1.month, expirydate1.day);
+        final differenceInDays = expirydate1.difference(day1).inDays;
+        return differenceInDays;
+      }
+
+      // ignore: non_constant_identifier_names
+      int days_calculation2(DateTime day1, DateTime expirydate1) {
+        day1 = DateTime(day1.year, day1.month, day1.day);
+        expirydate1 = DateTime(expirydate1.year, expirydate1.month,
+            DateTime(expirydate1.year, expirydate1.month + 1, 0).day);
+        final differenceInDays = expirydate1.difference(day1).inDays;
+        return differenceInDays;
       }
 
       try {
         if (_pickedImage == null) {
           _globalMethods.authErrorHandle('Please pick an image', context);
         } else {
-          setState(() {
-            _isLoading = true;
-          });
+          setState(() {});
           final ref = FirebaseStorage.instance
               .ref()
               .child('usersImages')
@@ -130,21 +153,26 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
             "Name": _nameofproduct.text,
             "Manufacturing Date": _dateController1.text,
             "Expiry Date": expirydate(date2, date3),
+            "Expiry Days": day2 != null
+                ? days_calculation(day1, day2!)
+                : days_calculation2(day1, day3!),
             "Quantity": _quantitycontroller.text + unit,
             'Product Image': url,
             "Category": category,
             "Location": _location.text,
             "Additional Information": _additionalinfo.text,
           };
-          FirebaseFirestore.instance.collection("users").doc(_uid).set(data);
-          Navigator.canPop(context) ? Navigator.pop(context) : null;
-          //_formGlobalKey.currentState!.reset();
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(_uid)
+              .collection("user_orders")
+              .add(data);
 
+          Navigator.canPop(context) ? Navigator.pop(context) : null;
+          _formGlobalKey.currentState!.reset();
         }
       } finally {
-        setState(() {
-          _isLoading = false;
-        });
+        setState(() {});
       }
     }
   }
@@ -159,9 +187,8 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
         aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0));
     final pickedImageFile = File(croppedImage!.path);
     setState(() {
-      this._pickedImage = pickedImageFile;
+      _pickedImage = pickedImageFile;
     });
-    Navigator.pop(context);
   }
 
   Future _pickImageGallery() async {
@@ -172,16 +199,14 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
         aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0));
     final pickedImageFile = File(croppedImage!.path);
     setState(() {
-      this._pickedImage = pickedImageFile;
+      _pickedImage = pickedImageFile;
     });
-    Navigator.pop(context);
   }
 
   void _remove() {
     setState(() {
       _pickedImage = null;
     });
-    Navigator.pop(context);
   }
 
   @override
@@ -241,7 +266,10 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                                 child: ListBody(
                                   children: [
                                     InkWell(
-                                      onTap: _pickImageCamera,
+                                      onTap: () async {
+                                        await _pickImageCamera();
+                                        Navigator.of(context).pop();
+                                      },
                                       splashColor: Colors.purple,
                                       child: Row(
                                         children: const [
@@ -263,7 +291,13 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                                       ),
                                     ),
                                     InkWell(
-                                      onTap: _pickImageGallery,
+                                      onTap: () {
+                                        setState(() {
+                                          _pickImageGallery();
+                                        });
+
+                                        Navigator.of(context).pop();
+                                      },
                                       splashColor: Colors.purple,
                                       child: Row(
                                         children: const [
@@ -285,7 +319,13 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                                       ),
                                     ),
                                     InkWell(
-                                      onTap: _remove,
+                                      onTap: () {
+                                        setState(() {
+                                          _remove();
+                                        });
+
+                                        Navigator.of(context).pop();
+                                      },
                                       splashColor: Colors.black,
                                       child: Row(
                                         children: const [
@@ -352,6 +392,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                           lastDate: DateTime(2025),
                         ).then((selectedDate) {
                           if (selectedDate != null) {
+                            day1 = selectedDate;
                             _dateController1.text =
                                 DateFormat('dd/MM/yyyy').format(selectedDate);
                           }
@@ -386,10 +427,11 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                             _dateController2.text =
                                 DateFormat('dd/MM/yyyy').format(selectedDate);
                             date2 = _dateController2.text;
+                            day2 = selectedDate;
                           }
                         });
                       },
-                      validator: (date_2) {
+                      /*validator: (date_2) {
                         if (date_2 == null ||
                             date_2.isEmpty ||
                             date3 == null ||
@@ -397,7 +439,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                           return 'Please enter expiry date.';
                         }
                         return null;
-                      },
+                      },*/
                     ),
                   ),
                 ),
@@ -437,14 +479,12 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                             _dateController3.text =
                                 DateFormat('MM/yyyy').format(selectedDate);
                             date3 = _dateController3.text;
+                            day3 = selectedDate;
                           }
                         });
                       },
                       validator: (date3) {
-                        if (date3 == null ||
-                            date3.isEmpty ||
-                            date2 == null ||
-                            date2.isEmpty) {
+                        if ((date3 == null || date3.isEmpty) && date2.isEmpty) {
                           return 'Please select best before month or expiry date.';
                         }
                         return null;

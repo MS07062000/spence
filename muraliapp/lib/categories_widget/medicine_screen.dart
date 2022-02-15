@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:muraliapp/bottomnavigationbar.dart';
 import 'package:muraliapp/categories_widget/card2.dart';
 
 class MedicineWidget extends StatefulWidget {
@@ -10,10 +12,52 @@ class MedicineWidget extends StatefulWidget {
 }
 
 class _Medicinepage extends State<MedicineWidget> {
-  final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
-      .collection('test')
+  Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
+      .collection('users')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .collection("user_orders")
       .where('Category', isEqualTo: 'Medicine')
       .snapshots();
+  var myMenuItems = <String>[
+    'Expiring within a week',
+    'Expiring within a month',
+    'Sort Alphabetically',
+  ];
+
+  void onSelect(item) {
+    switch (item) {
+      case 'Expiring within a week':
+        _usersStream = FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection("user_orders")
+            .where('Category', isEqualTo: 'Medicine')
+            .where('Expiry Days', isLessThanOrEqualTo: 7)
+            .orderBy('Name')
+            .snapshots();
+        break;
+      case 'Expiring within a month':
+        _usersStream = FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection("user_orders")
+            .where('Category', isEqualTo: 'Medicine')
+            .where('Expiry Days', isGreaterThanOrEqualTo: 7)
+            .where('Expiry Days', isLessThanOrEqualTo: 31)
+            .orderBy('Name')
+            .snapshots();
+        break;
+      case 'Sort Alphabetically':
+        _usersStream = FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection("user_orders")
+            .where('Category', isEqualTo: 'Medicine')
+            .orderBy('Name')
+            .snapshots();
+        break;
+    }
+  }
 
   showError(String errormessage) {
     showDialog(
@@ -37,18 +81,27 @@ class _Medicinepage extends State<MedicineWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Medicine'),
-          backgroundColor: Colors.orange,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              /*Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const HomepageWidget()),
-              );*/
-              Navigator.pop(context);
-            },
-          )),
+        title: const Text('Medicine'),
+        backgroundColor: Colors.orange,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        actions: <Widget>[
+          PopupMenuButton<String>(
+              onSelected: onSelect,
+              itemBuilder: (BuildContext context) {
+                return myMenuItems.map((String choice) {
+                  return PopupMenuItem<String>(
+                    child: Text(choice),
+                    value: choice,
+                  );
+                }).toList();
+              })
+        ],
+      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _usersStream,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -71,13 +124,14 @@ class _Medicinepage extends State<MedicineWidget> {
                   document.data()! as Map<String, dynamic>;
               return Card2Widget(
                   name: data['Name'],
-                  date: data['Expiry Date'],
-                  image: data['Expiry Date'],
+                  date: data['Expiry Days'],
+                  image: data['Product Image'],
                   quantity: data['Quantity']);
             }).toList(),
           );
         },
       ),
+      //bottomNavigationBar: const BottomNavigationBarWidget(),
     );
   }
 }
