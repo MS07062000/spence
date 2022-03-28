@@ -5,7 +5,7 @@ class CardWidget extends StatefulWidget {
   final String value;
   final String image;
   final screen_name;
-  final String num;
+  final int num;
   const CardWidget({
     Key? key,
     required this.value,
@@ -41,7 +41,7 @@ class _MyStatefulWidgetState extends State<CardWidget> {
                 children: [
                   ListTile(
                     title: Text(widget.value),
-                    subtitle: Text(widget.num + " Items"),
+                    subtitle: Text(widget.num.toString() + " Items"),
                   ),
                 ],
               ),

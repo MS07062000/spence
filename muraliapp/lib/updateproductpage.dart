@@ -2,48 +2,78 @@ import 'dart:core';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:muraliapp/global_method.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:muraliapp/home.dart';
 import 'package:muraliapp/home2.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:muraliapp/login_signup_widgets/login.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-class AddproductpageWidget extends StatefulWidget {
-  const AddproductpageWidget({Key? key}) : super(key: key);
+class UpdateproductpageWidget extends StatefulWidget {
+  final String manufacturingdate;
+  final int expirydays;
+  final String expirydate;
+  final String quantity;
+  final String location;
+  final String additionalinformation;
+  final String category;
+  final String productimage;
+  final String name;
+  final String docid;
+  final int uniqueid;
+
+  const UpdateproductpageWidget(
+      {Key? key,
+      required this.docid,
+      required this.name,
+      required this.manufacturingdate,
+      required this.expirydate,
+      required this.location,
+      required this.additionalinformation,
+      required this.category,
+      required this.productimage,
+      required this.expirydays,
+      required this.quantity,
+      required this.uniqueid})
+      : super(key: key);
 
   @override
-  State<AddproductpageWidget> createState() => _Addproduct();
+  State<UpdateproductpageWidget> createState() => _Updateproduct();
 }
 
-class _Addproduct extends State<AddproductpageWidget> {
+class _Updateproduct extends State<UpdateproductpageWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
           title: const Text(
-            'Add Product',
+            'Update Product',
             style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
           ),
           backgroundColor: Colors.orange,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              /*Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const Homepage2Widget()),
-              );*/
               Navigator.of(context).pop();
             },
           )),
-      body: const MyCustomForm(),
+      body: MyCustomForm(
+        manufacturingdate_1: widget.manufacturingdate,
+        expirydays_1: widget.expirydays,
+        expirydate_1: widget.expirydate,
+        quantity_1: widget.quantity,
+        location_1: widget.location,
+        additionalinformation_1: widget.additionalinformation,
+        category_1: widget.category,
+        productimage_1: widget.productimage,
+        name_1: widget.name,
+        docid_1: widget.docid,
+        uniqueid_1: widget.uniqueid,
+      ),
     );
   }
 }
@@ -83,7 +113,32 @@ _inputdec2(String text, IconData text2) {
 }
 
 class MyCustomForm extends StatefulWidget {
-  const MyCustomForm({Key? key}) : super(key: key);
+  final String manufacturingdate_1;
+  final int expirydays_1;
+  final String expirydate_1;
+  final String quantity_1;
+  final String location_1;
+  final String additionalinformation_1;
+  final String category_1;
+  final String productimage_1;
+  final String name_1;
+  final String docid_1;
+  final int uniqueid_1;
+
+  const MyCustomForm(
+      {Key? key,
+      required this.docid_1,
+      required this.uniqueid_1,
+      required this.name_1,
+      required this.manufacturingdate_1,
+      required this.expirydate_1,
+      required this.location_1,
+      required this.additionalinformation_1,
+      required this.category_1,
+      required this.productimage_1,
+      required this.expirydays_1,
+      required this.quantity_1})
+      : super(key: key);
 
   @override
   State<MyCustomForm> createState() => _MyCustomStatefulWidgetState();
@@ -91,9 +146,46 @@ class MyCustomForm extends StatefulWidget {
 
 class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
   late FlutterLocalNotificationsPlugin fltrNotifications;
+
+  File? _pickedImage;
+  late String url;
+  final _formGlobalKey = GlobalKey<FormState>();
+  var date2 = "";
+  var date3 = "";
+  late String unit;
+  late String category;
+  late TextEditingController nameofproduct;
+  late TextEditingController dateController1;
+  late TextEditingController dateController2;
+  TextEditingController dateController3 = TextEditingController();
+  late TextEditingController location;
+  late TextEditingController additionalinfo;
+  late TextEditingController quantitycontroller;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  late DateTime day1;
+  DateTime? day2;
+  DateTime? day3;
+
   @override
   void initState() {
     super.initState();
+    nameofproduct = TextEditingController();
+    dateController1 = TextEditingController();
+    dateController2 = TextEditingController();
+    location = TextEditingController();
+    additionalinfo = TextEditingController();
+    quantitycontroller = TextEditingController();
+    nameofproduct.text = widget.name_1;
+    location.text = widget.location_1;
+    additionalinfo.text = widget.additionalinformation_1;
+    quantitycontroller.text = widget.quantity_1.split(' ')[0];
+    unit = widget.quantity_1.split(' ')[1];
+    category = widget.category_1;
+    dateController1.text = widget.manufacturingdate_1;
+    dateController2.text = widget.expirydate_1;
+    nameofproduct.addListener(() {
+      print(nameofproduct.text);
+    });
     var androidInitilize = const AndroidInitializationSettings('app_icon');
     var iOSinitilize = const IOSInitializationSettings();
     var initilizationsSettings =
@@ -103,31 +195,18 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
         onSelectNotification: notificationSelected());
   }
 
-  File? _pickedImage;
-  String? url;
-  final _formGlobalKey = GlobalKey<FormState>();
-  var date2 = "";
-  var date3 = "";
-  String unit = "Android";
-  String category = "Bakery";
-  final _nameofproduct = TextEditingController();
-  final _dateController1 = TextEditingController();
-  final _dateController2 = TextEditingController();
-  final _dateController3 = TextEditingController();
-  final _location = TextEditingController();
-  final _additionalinfo = TextEditingController();
-  final _quantitycontroller = TextEditingController();
-  final GlobalMethods _globalMethods = GlobalMethods();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  late DateTime day1;
-  DateTime? day2;
-  DateTime? day3;
-
   void _trysubmit() async {
     bool isvalid;
     isvalid = _formGlobalKey.currentState!.validate();
 
     if (isvalid) {
+      String expirydate(String datex, String datey) {
+        if (datex.isEmpty) {
+          return datey;
+        }
+        return datex;
+      }
+
       // ignore: non_constant_identifier_names
       int days_calculation(DateTime day1, DateTime expirydate1) {
         day1 = DateTime(day1.year, day1.month, day1.day);
@@ -137,59 +216,73 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
         return differenceInDays;
       }
 
+      // ignore: non_constant_identifier_names
+      int days_calculation2(DateTime day1, DateTime expirydate1) {
+        day1 = DateTime(day1.year, day1.month, day1.day);
+        expirydate1 = DateTime(expirydate1.year, expirydate1.month,
+            DateTime(expirydate1.year, expirydate1.month + 1, 0).day);
+        final differenceInDays = expirydate1.difference(day1).inDays;
+        return differenceInDays;
+      }
+
       try {
-        if (_pickedImage == null) {
-          _globalMethods.authErrorHandle('Please pick an image', context);
-        } else {
-          setState(() {});
-          final User? user = _auth.currentUser;
-          final _uid = user!.uid;
-          final ref = FirebaseStorage.instance
+        setState(() {});
+        final User? user = _auth.currentUser;
+        final _uid = user!.uid;
+        if (nameofproduct != widget.name_1 && _pickedImage == null) {
+          var fileUrl = File('gs://spence-38472.appspot.com/usersImages/' +
+              widget.name_1 +
+              '.jpg');
+
+          FirebaseStorage storage = FirebaseStorage.instance;
+          storage
               .ref()
               .child('usersImages')
               .child(_uid)
-              .child(_nameofproduct.text + '.jpg');
-          await ref.putFile(_pickedImage!);
-          url = await ref.getDownloadURL();
-          int uniqueid = DateTime.now().millisecondsSinceEpoch;
-          _formGlobalKey.currentState!.save();
-          Map<String, dynamic> data = {
-            "Name": _nameofproduct.text,
-            "Manufacturing Date": _dateController1.text,
-            "Expiry Date": day2 != null
-                ? DateFormat('dd/MM/yyyy').format(day2!).toString()
-                : DateFormat('dd/MM/yyyy').format(day3!).toString(),
-            "Expiry Days": day2 != null
-                ? days_calculation(DateTime.now(), day2!)
-                : days_calculation(DateTime.now(), day3!),
-            "Quantity": _quantitycontroller.text + " " + unit,
-            'Product Image': url,
-            "Category": category,
-            "Location": _location.text,
-            "Additional Information": _additionalinfo.text,
-            "Uniqueid": uniqueid,
-          };
-
-          FirebaseFirestore.instance
-              .collection('users')
-              .doc(_uid)
-              .collection("user_orders")
-              .add(data);
-          FirebaseFirestore.instance
-              .collection('users')
-              .doc(_uid)
-              .collection("user_orders")
-              .doc("count")
-              .update({data[category]: FieldValue.increment(1)});
-          _showNotification(
-              uniqueid,
-              _nameofproduct.text,
-              day2 != null
-                  ? days_calculation(DateTime.now(), day2!)
-                  : days_calculation(DateTime.now(), day3!));
-          Navigator.canPop(context) ? Navigator.pop(context) : null;
-          _formGlobalKey.currentState!.reset();
+              .child(nameofproduct.text + 'jpg');
+          await storage.ref().putFile(fileUrl);
+          url = await storage.ref().getDownloadURL();
+          storage.refFromURL(widget.productimage_1).delete();
         }
+        if (_pickedImage != null) {
+          FirebaseStorage storage = FirebaseStorage.instance;
+          storage.refFromURL(widget.productimage_1).delete();
+          storage
+              .ref()
+              .child('usersImages')
+              .child(_uid)
+              .child(nameofproduct.text + '.jpg');
+          await storage.ref().putFile(_pickedImage!);
+          url = await storage.ref().getDownloadURL();
+        }
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(_uid)
+            .collection("user_orders")
+            .doc(widget.docid_1)
+            .update({
+          "Name": nameofproduct.text,
+          "Manufacturing Date": dateController1.text,
+          "Expiry Date": expirydate(date2, date3),
+          "Expiry Days": day2 != null
+              ? days_calculation(DateTime.now(), day2!)
+              : days_calculation2(DateTime.now(), day3!),
+          "Quantity": quantitycontroller.text + " " + unit,
+          'Product Image': url,
+          "Category": category,
+          "Location": location.text,
+          "Additional Information": additionalinfo.text,
+          "Uniqueid": widget.uniqueid_1,
+        });
+        await FlutterLocalNotificationsPlugin().cancel(widget.uniqueid_1);
+        _showNotification(
+            widget.uniqueid_1,
+            nameofproduct.text,
+            day2 != null
+                ? days_calculation(DateTime.now(), day2!)
+                : days_calculation(DateTime.now(), day3!));
+
+        Navigator.canPop(context) ? Navigator.pop(context) : null;
       } finally {
         setState(() {});
       }
@@ -243,12 +336,6 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
     });
   }
 
-  void _remove() {
-    setState(() {
-      _pickedImage = null;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -269,13 +356,13 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                     radius: 68,
                     backgroundColor: Colors.white,
                     child: ClipOval(
-                      child: _pickedImage != null
-                          ? Image.file(
-                              _pickedImage!,
+                      child: _pickedImage == null
+                          ? Image.network(
+                              widget.productimage_1,
                               fit: BoxFit.cover,
                             )
-                          : Image.network(
-                              'https://upload.wikimedia.org/wikipedia/commons/5/5f/Alberto_conversi_profile_pic.jpg',
+                          : Image.file(
+                              _pickedImage!,
                               fit: BoxFit.cover,
                             ),
                     ),
@@ -358,34 +445,6 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                                         ],
                                       ),
                                     ),
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          _remove();
-                                        });
-
-                                        Navigator.of(context).pop();
-                                      },
-                                      splashColor: Colors.black,
-                                      child: Row(
-                                        children: const [
-                                          Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: Icon(
-                                              Icons.remove_circle,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          Text(
-                                            'Remove',
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.red),
-                                          )
-                                        ],
-                                      ),
-                                    ),
                                   ],
                                 ),
                               ),
@@ -406,7 +465,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                     keyboardType: TextInputType.text,
                     maxLength: 20,
                     decoration: _inputdec("Enter name of product"),
-                    controller: _nameofproduct,
+                    controller: nameofproduct,
                     validator: (name) {
                       if (name == null || name.isEmpty) {
                         return 'Please enter name of product';
@@ -421,7 +480,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                     width: MediaQuery.of(context).size.width * 0.50,
                     child: TextFormField(
                       readOnly: true,
-                      controller: _dateController1,
+                      controller: dateController1,
                       decoration: _inputdec2(
                           'Manufacturing Date', Icons.calendar_today),
                       onTap: () async {
@@ -433,7 +492,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                         ).then((selectedDate) {
                           if (selectedDate != null) {
                             day1 = selectedDate;
-                            _dateController1.text =
+                            dateController1.text =
                                 DateFormat('dd/MM/yyyy').format(selectedDate);
                           }
                         });
@@ -453,7 +512,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                     width: MediaQuery.of(context).size.width * 0.50,
                     child: TextFormField(
                       readOnly: true,
-                      controller: _dateController2,
+                      controller: dateController2,
                       decoration:
                           _inputdec2('Expiry Date', Icons.calendar_today),
                       onTap: () async {
@@ -464,13 +523,14 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                           lastDate: DateTime(2025),
                         ).then((selectedDate) {
                           if (selectedDate != null) {
-                            _dateController2.text =
+                            dateController2.text =
                                 DateFormat('dd/MM/yyyy').format(selectedDate);
-                            date2 = _dateController2.text;
+                            date2 = dateController2.text;
                             day2 = selectedDate;
                           }
                         });
                       },
+
                       /*validator: (date_2) {
                         if (date_2 == null ||
                             date_2.isEmpty ||
@@ -505,7 +565,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                     width: MediaQuery.of(context).size.width * 0.50,
                     child: TextFormField(
                       readOnly: true,
-                      controller: _dateController3,
+                      controller: dateController3,
                       decoration:
                           _inputdec2('Best Before', Icons.calendar_today),
                       onTap: () async {
@@ -516,28 +576,22 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                           lastDate: DateTime(2025),
                         ).then((selectedDate) {
                           if (selectedDate != null) {
-                            _dateController3.text =
+                            dateController3.text =
                                 DateFormat('MM/yyyy').format(selectedDate);
-                            date3 = _dateController3.text;
-                            if (selectedDate.month < 12) {
-                              day3 = DateTime(
-                                  selectedDate.year,
-                                  selectedDate.month,
-                                  DateTime(selectedDate.year,
-                                          selectedDate.month + 1, 0)
-                                      .day);
-                            } else {
-                              day3 = DateTime(
-                                  selectedDate.year,
-                                  selectedDate.month,
-                                  DateTime(selectedDate.year + 1,
-                                          selectedDate.month + 1, 0)
-                                      .day);
-                            }
+                            date3 = dateController3.text;
+                            day3 = selectedDate;
                           }
                         });
                       },
                       validator: (date3) {
+                        if (dateController2.text.isNotEmpty) {
+                          date2 = dateController2.text;
+                          day2 = DateTime(
+                              int.parse(date2.substring(6)),
+                              int.parse(date2.substring(3, 5)),
+                              int.parse(date2.substring(0, 2)));
+                        }
+
                         if ((date3 == null || date3.isEmpty) && date2.isEmpty) {
                           return 'Please select best before month or expiry date.';
                         }
@@ -561,7 +615,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                               keyboardType: TextInputType.number,
                               maxLength: 100,
                               decoration: _inputdec("Quantity"),
-                              controller: _quantitycontroller,
+                              controller: quantitycontroller,
                             ),
                           ),
                         ],
@@ -573,7 +627,6 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                           child: DropdownButtonHideUnderline(
                             child: DropdownButtonFormField<String>(
                               decoration: _inputdec("Unit"),
-                              value: unit,
                               style: const TextStyle(color: Colors.black),
                               items: <String>[
                                 'Android',
@@ -589,6 +642,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                                   child: Text(value),
                                 );
                               }).toList(),
+                              value: unit,
                               onChanged: (value) {
                                 setState(() {
                                   unit = value!;
@@ -608,7 +662,6 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                     child: DropdownButtonHideUnderline(
                       child: DropdownButtonFormField<String>(
                         decoration: _inputdec("Category"),
-                        value: category,
                         hint: const Text(
                           "Select Item Type",
                           style: TextStyle(color: Colors.grey),
@@ -626,6 +679,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                             child: Text(value),
                           );
                         }).toList(),
+                        value: category,
                         onChanged: (String? value) {
                           setState(() {
                             category = value!;
@@ -640,7 +694,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                   child: TextFormField(
                       keyboardType: TextInputType.text,
                       maxLength: 20,
-                      controller: _location,
+                      controller: location,
                       decoration: _inputdec("Location")),
                 ),
                 Padding(
@@ -648,7 +702,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                   child: TextFormField(
                       keyboardType: TextInputType.text,
                       maxLength: 50,
-                      controller: _additionalinfo,
+                      controller: additionalinfo,
                       decoration: _inputdec("Additional Information")),
                 ),
                 Padding(
@@ -659,7 +713,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                     child: ElevatedButton(
                       onPressed: _trysubmit,
                       child: const Text(
-                        'Add Product',
+                        'Update Product',
                         style: TextStyle(
                             color: Color.fromRGBO(49, 27, 146, 1),
                             fontSize: 20),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:muraliapp/home2.dart';
 import 'package:muraliapp/login_signup_widgets/reset.dart';
 import 'package:muraliapp/login_signup_widgets/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:muraliapp/home.dart';
 import 'package:email_validator/email_validator.dart';
 
 class LoginPage extends StatefulWidget {
@@ -20,7 +22,10 @@ class _LoginState extends State<LoginPage> {
   checkAuthentification() async {
     _auth.authStateChanges().listen((user) {
       if (user != null) {
-        Navigator.of(context).pushReplacementNamed('/home');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Homepage2Widget()),
+        );
       }
     });
   }
@@ -41,6 +46,34 @@ class _LoginState extends State<LoginPage> {
       } on FirebaseAuthException catch (e) {
         showError(e.message.toString());
       }
+    }
+  }
+
+  Future<UserCredential> googleSignIn() async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+    if (googleUser != null) {
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      if (googleAuth.idToken != null && googleAuth.accessToken != null) {
+        final AuthCredential credential = GoogleAuthProvider.credential(
+            accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+
+        final UserCredential user =
+            await _auth.signInWithCredential(credential);
+
+        await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Homepage2Widget()),
+        );
+
+        return user;
+      } else {
+        throw StateError('Missing Google Auth Token');
+      }
+    } else {
+      throw StateError('Sign in Aborted');
     }
   }
 
@@ -66,7 +99,11 @@ class _LoginState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        title: const Text(
+          'Login',
+          style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
+        ),
+        backgroundColor: Colors.orange,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
@@ -194,6 +231,10 @@ class _LoginState extends State<LoginPage> {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 20.0),
+                        SignInButton(Buttons.Google,
+                            text: "Log In with Google",
+                            onPressed: googleSignIn),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[

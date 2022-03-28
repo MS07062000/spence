@@ -1,18 +1,36 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:muraliapp/updateproductpage.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Card2Widget extends StatefulWidget {
+  final String docid;
   final String name;
-  final int date;
+  final String expirydate;
   final String quantity;
   final String image;
+  final String manufacturingdate;
+  final int expirydays;
+  final String location;
+  final String additionalinformation;
+  final String category;
+  final int uniqueid;
+
   const Card2Widget({
     Key? key,
+    required this.docid,
     required this.image,
     required this.name,
-    required this.date,
+    required this.expirydate,
     required this.quantity,
+    required this.manufacturingdate,
+    required this.expirydays,
+    required this.location,
+    required this.additionalinformation,
+    required this.category,
+    required this.uniqueid,
   }) : super(key: key);
 
   @override
@@ -51,7 +69,7 @@ class _MyCardWidgetState extends State<Card2Widget> {
                       ),
                     ),
                     Text(
-                      "Expires in " + widget.date.toString() + " days",
+                      "Expires on " + widget.expirydate,
                       style: const TextStyle(color: Colors.red),
                     ),
                     Text(
@@ -68,13 +86,33 @@ class _MyCardWidgetState extends State<Card2Widget> {
               children: <Widget>[
                 IconButton(
                   color: Colors.orange,
-                  onPressed: () {},
-                  icon: const Icon(Icons.menu),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => UpdateproductpageWidget(
+                                  name: widget.name,
+                                  manufacturingdate: widget.manufacturingdate,
+                                  expirydays: widget.expirydays,
+                                  expirydate: widget.expirydate,
+                                  quantity: widget.quantity,
+                                  location: widget.location,
+                                  additionalinformation:
+                                      widget.additionalinformation,
+                                  category: widget.category,
+                                  productimage: widget.image,
+                                  docid: widget.docid,
+                                  uniqueid: widget.uniqueid,
+                                )));
+                  },
+                  icon: const Icon(Icons.edit),
                 ),
                 IconButton(
                   color: Colors.orange,
-                  onPressed: () {},
-                  icon: const Icon(Icons.find_replace_sharp),
+                  onPressed: () {
+                    showError();
+                  },
+                  icon: const Icon(Icons.delete),
                 )
               ],
             ),
@@ -88,5 +126,48 @@ class _MyCardWidgetState extends State<Card2Widget> {
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(color: Colors.orange, width: 1)),
     );
+  }
+
+  Future<void> deleteUser() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final User? user = _auth.currentUser;
+    final _uid = user!.uid;
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(_uid)
+        .collection("user_orders")
+        .doc(widget.docid)
+        .delete();
+    await FlutterLocalNotificationsPlugin().cancel(widget.uniqueid);
+
+    return FirebaseStorage.instance
+        .ref()
+        .child('usersImages')
+        .child(_uid)
+        .child(widget.name + '.jpg')
+        .delete();
+  }
+
+  showError() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Are you sure?'),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    deleteUser();
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Yes')),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('No'))
+            ],
+          );
+        });
   }
 }

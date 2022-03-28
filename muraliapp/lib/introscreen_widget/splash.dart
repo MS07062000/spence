@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:muraliapp/home2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:muraliapp/home.dart';
 import 'package:muraliapp/introscreen_widget/onboardingpage.dart';
 
 class Splash extends StatefulWidget {
@@ -18,7 +18,7 @@ class SplashState extends State<Splash> with AfterLayoutMixin<Splash> {
 
     if (_seen) {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const HomepageWidget()));
+          MaterialPageRoute(builder: (context) => const Homepage2Widget()));
     } else {
       await prefs.setBool('seen', true);
       Navigator.of(context).pushReplacement(

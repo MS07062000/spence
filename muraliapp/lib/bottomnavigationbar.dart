@@ -1,5 +1,5 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:muraliapp/addproductpage.dart';
 import 'package:muraliapp/expiringsoon.dart';
 import 'package:muraliapp/home.dart';
 
@@ -13,33 +13,18 @@ class BottomNavigationBarWidget extends StatefulWidget {
 
 /// This is the private State class that goes with Bottom_navigation_bar_widget.
 class _BottomNavigation extends State<BottomNavigationBarWidget> {
-  int _selectedIndex = 0;
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomepageWidget(),
-    Text(
-      'Index 0: Home',
-    ),
-    Text(
-      'Index 0: Home',
-    ),
-    ExpiringsoonpageWidget(),
-    Text(
-      'Index 2: School',
-    ),
+  List<Widget> data = [
+    const HomepageWidget(),
+    const HomeTab(),
+    const HomeTab(),
+    const ExpiringsoonpageWidget(),
+    const HomeTab(),
   ];
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
+    return CupertinoTabScaffold(
+      tabBar: CupertinoTabBar(
+        activeColor: Colors.orange,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -51,23 +36,42 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.camera_alt_sharp),
-            label: "Home",
+            label: "Scan",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.hourglass_top_rounded),
-            label: "Home",
+            label: "Expiring Soon",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.pie_chart_outline),
-            label: "Home",
+            label: "Garbage Report",
           ),
         ],
         backgroundColor: Colors.white,
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.orange,
-        onTap: _onItemTapped,
-        unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
+      ),
+      tabBuilder: (BuildContext context, int index) {
+        return CupertinoTabView(
+          builder: (context) {
+            return data[index];
+          },
+        );
+      },
+    );
+  }
+}
+
+class HomeTab extends StatelessWidget {
+  const HomeTab({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      child: Container(
+        alignment: Alignment.center,
+        height: MediaQuery.of(context).size.height,
+        child: const Text(
+          "This is home page",
+          style: TextStyle(fontSize: 20),
+        ),
       ),
     );
   }

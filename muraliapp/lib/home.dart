@@ -64,161 +64,149 @@ class _Homepage extends State<HomepageWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Spence'),
-        backgroundColor: Colors.orange,
-        actions: <Widget>[
-          Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () async {
-                  await signOut();
-                },
-                child: const Icon(
-                  Icons.logout,
-                  size: 26.0,
-                ),
-              )),
-        ],
-      ),
-      body: const MyCustomForm(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const AddproductpageWidget()),
-          );
-        },
-        child: const Icon(Icons.add),
-        backgroundColor: Colors.orange,
-      ),
-    );
+        appBar: AppBar(
+          title: const Text('Spence'),
+          backgroundColor: Colors.orange,
+          actions: <Widget>[
+            Padding(
+                padding: const EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  onTap: () async {
+                    await signOut();
+                  },
+                  child: const Icon(
+                    Icons.logout,
+                    size: 26.0,
+                  ),
+                )),
+          ],
+        ),
+        body: const MyCustomForm(),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(right: 25),
+          child: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AddproductpageWidget()),
+              );
+            },
+            child: const Icon(Icons.add),
+            backgroundColor: Colors.orange,
+          ),
+        ));
   }
 }
 
 class MyCustomForm extends StatelessWidget {
   const MyCustomForm({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        CardWidget(
-          value: "Bakery",
-          image: 'assets/bakery 1.png',
-          screen_name: const BakeryWidget(),
-          num: FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                  .collection("user_orders")
-                  .where('Category', isEqualTo: "Bakery")
-                  .snapshots()
-                  .length
-                  .toString()
-                  .isEmpty
-              ? 0.toString()
-              : FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                  .collection("user_orders")
-                  .where('Category', isEqualTo: "Bakery")
-                  .snapshots()
-                  .length
-                  .toString(),
-        ),
-        CardWidget(
-          value: "Dairy",
-          image: 'assets/dairy 1.png',
-          screen_name: const DairyWidget(),
-          num: FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                  .collection("user_orders")
-                  .where('Category', isEqualTo: "Dairy")
-                  .snapshots()
-                  .length
-                  .toString()
-                  .isEmpty
-              ? 0.toString()
-              : FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                  .collection("user_orders")
-                  .where('Category', isEqualTo: "Dairy")
-                  .snapshots()
-                  .length
-                  .toString(),
-        ),
-        CardWidget(
-          value: "Medicine",
-          image: 'assets/pills 1.png',
-          screen_name: const MedicineWidget(),
-          num: FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                  .collection("user_orders")
-                  .where('Category', isEqualTo: "Medicine")
-                  .snapshots()
-                  .length
-                  .toString()
-                  .isEmpty
-              ? 0.toString()
-              : FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                  .collection("user_orders")
-                  .where('Category', isEqualTo: "Medicine")
-                  .snapshots()
-                  .length
-                  .toString(),
-        ),
-        CardWidget(
-          value: "Frozen Food",
-          image: 'assets/frozen-food 1.png',
-          screen_name: const FrozenFoodWidget(),
-          num: FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                  .collection("user_orders")
-                  .where('Category', isEqualTo: "Frozen Food")
-                  .snapshots()
-                  .length
-                  .toString()
-                  .isEmpty
-              ? 0.toString()
-              : FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                  .collection("user_orders")
-                  .where('Category', isEqualTo: "Frozen Food")
-                  .snapshots()
-                  .length
-                  .toString(),
-        ),
-        CardWidget(
-          value: "Others",
-          image: 'assets/bakery.png',
-          screen_name: const OthersWidget(),
-          num: FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                  .collection("user_orders")
-                  .where('Category', isEqualTo: "Others")
-                  .snapshots()
-                  .length
-                  .toString()
-                  .isEmpty
-              ? 0.toString()
-              : FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                  .collection("user_orders")
-                  .where('Category', isEqualTo: "Others")
-                  .snapshots()
-                  .length
-                  .toString(),
-        ),
-      ],
-    );
+    //num2 = 0, num3 = 0, num4 = 0, num5 = 0;
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("user_orders")
+        .doc("count")
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+      } else {
+        Map<String, dynamic> data = {
+          "Bakery": 0,
+          "Dairy": 0,
+          "Medicine": 0,
+          "Frozen Food": 0,
+          "Others": 0,
+        };
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection("user_orders")
+            .doc("count")
+            .set(data);
+      }
+    });
+    List<String> _value = [
+      'Bakery',
+      'Dairy',
+      'Medicine',
+      'Frozen Food',
+      'Others'
+    ];
+    List<String> _screenpic = [
+      'assets/bakery 1.png',
+      'assets/dairy 1.png',
+      'assets/pills 1.png',
+      'assets/frozen-food 1.png',
+      'assets/bakery.png'
+    ];
+    List<Widget> _screenname = [
+      const BakeryWidget(),
+      const DairyWidget(),
+      const MedicineWidget(),
+      const FrozenFoodWidget(),
+      const OthersWidget()
+    ];
+
+    Stream<DocumentSnapshot> provideDocumentFieldStream() {
+      return FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection("user_orders")
+          .doc('count')
+          .snapshots();
+    }
+
+    return StreamBuilder<DocumentSnapshot>(
+        stream: provideDocumentFieldStream(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError ||
+              snapshot.connectionState == ConnectionState.waiting) {
+            return Container(
+                alignment: Alignment.topCenter,
+                margin: const EdgeInsets.only(top: 20),
+                child: const CircularProgressIndicator(
+                  color: Colors.orange,
+                ));
+          }
+          var doc = snapshot.data as DocumentSnapshot;
+          return ListView(children: [
+            CardWidget(
+              value: _value[0],
+              image: _screenpic[0],
+              screen_name: _screenname[0],
+              num: doc.get("Bakery"),
+            ),
+            CardWidget(
+              value: _value[1],
+              image: _screenpic[1],
+              screen_name: _screenname[1],
+              num: doc.get('Dairy'),
+            ),
+            CardWidget(
+              value: _value[2],
+              image: _screenpic[2],
+              screen_name: _screenname[2],
+              num: doc.get('Medicine'),
+            ),
+            CardWidget(
+              value: _value[3],
+              image: _screenpic[3],
+              screen_name: _screenname[3],
+              num: doc.get('Frozen Food'),
+            ),
+            CardWidget(
+              value: _value[4],
+              image: _screenpic[4],
+              screen_name: _screenname[4],
+              num: doc.get('Others'),
+            ),
+          ]);
+        });
   }
 }
