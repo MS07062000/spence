@@ -3,8 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:muraliapp/categories_widget/card2.dart';
 
-import '../home2.dart';
-
 class FrozenFoodWidget extends StatefulWidget {
   const FrozenFoodWidget({Key? key}) : super(key: key);
 
@@ -94,7 +92,7 @@ class _FrozenFoodpage extends State<FrozenFoodWidget> {
             }).toList(),
           );
         },
-      ), //bottomNavigationBar: const BottomNavigationBarWidget(),
+      ),
     );
   }
 }

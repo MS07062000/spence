@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:muraliapp/categories_widget/card2.dart';
 import 'package:muraliapp/categories_widget/branch.dart';
-import 'package:muraliapp/home2.dart';
 
 class MedicineWidget extends StatefulWidget {
   const MedicineWidget({Key? key}) : super(key: key);

@@ -97,7 +97,7 @@ class _Dairypage extends State<DairyWidget> {
             }).toList(),
           );
         },
-      ), //bottomNavigationBar: const BottomNavigationBarWidget(),
+      ),
     );
   }
 }

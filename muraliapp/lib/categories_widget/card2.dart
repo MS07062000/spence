@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:muraliapp/updateproductpage.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:muraliapp/notifications.dart';
 
 class Card2Widget extends StatefulWidget {
   final String docid;
@@ -138,8 +138,14 @@ class _MyCardWidgetState extends State<Card2Widget> {
         .collection("user_orders")
         .doc(widget.docid)
         .delete();
-    await FlutterLocalNotificationsPlugin().cancel(widget.uniqueid);
 
+    cancelScheduledNotifications(widget.uniqueid);
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(_uid)
+        .collection("user_orders")
+        .doc("count")
+        .update({widget.category: FieldValue.increment(-1)});
     return FirebaseStorage.instance
         .ref()
         .child('usersImages')

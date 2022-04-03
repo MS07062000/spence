@@ -5,7 +5,6 @@ void countdowntimer() {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final User? user = _auth.currentUser;
   final _uid = user!.uid;
-
   FirebaseFirestore.instance
       .collection('users')
       .doc(_uid)
@@ -14,19 +13,18 @@ void countdowntimer() {
       .then((snapshot) => {
             if (snapshot.docs.isNotEmpty)
               {
-                for (var doc in snapshot.docs)
-                  {
-                    doc.data().update('Expiry Days', ((value) {
-                      days_calculation(
-                          DateTime.now(), doc.data()['Expiry Date'].toString());
-                    }))
-                  }
+                snapshot.docs.map((DocumentSnapshot document) {
+                  Map<String, dynamic> data =
+                      document.data()! as Map<String, dynamic>;
+                  data.update('Expiry Days',
+                      days_calculation(DateTime.now(), data['Expiry Date']));
+                }),
               }
           });
 }
 
 // ignore: non_constant_identifier_names
-int days_calculation(DateTime day1, String expirydate1) {
+days_calculation(DateTime day1, String expirydate1) {
   day1 = DateTime(day1.year, day1.month, day1.day);
   DateTime expirydate2 = DateTime(
       int.parse(expirydate1.substring(6)),

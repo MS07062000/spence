@@ -19,7 +19,7 @@ class _Bakerypage extends State<BakeryWidget> {
       .doc(FirebaseAuth.instance.currentUser!.uid)
       .collection('user_orders')
       .where('Category', isEqualTo: 'Bakery')
-      .snapshots(includeMetadataChanges: true);
+      .snapshots();
 
   showError(String errormessage) {
     showDialog(
@@ -55,10 +55,6 @@ class _Bakerypage extends State<BakeryWidget> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            /*Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const Homepage2Widget()),
-            );*/
             Navigator.of(context).pop();
           },
         ),
@@ -99,7 +95,7 @@ class _Bakerypage extends State<BakeryWidget> {
             }).toList(),
           );
         },
-      ), //bottomNavigationBar: const BottomNavigationBarWidget(),
+      ),
     );
   }
 }

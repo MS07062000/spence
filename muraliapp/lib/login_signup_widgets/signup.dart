@@ -93,150 +93,158 @@ class _SignUpState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Signup',
-          style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
+    return WillPopScope(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Signup',
+            style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
+          ),
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
         ),
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Container(
-            color: Colors.white,
-            child: Column(
-              children: <Widget>[
-                const SizedBox(
-                  height: 200,
-                  child: Image(
-                    image: AssetImage("assets/logo2.png"),
-                    fit: BoxFit.contain,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Container(
+              color: Colors.white,
+              child: Column(
+                children: <Widget>[
+                  const SizedBox(
+                    height: 200,
+                    child: Image(
+                      image: AssetImage("assets/logo2.png"),
+                      fit: BoxFit.contain,
+                    ),
                   ),
-                ),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: <Widget>[
-                      TextFormField(
-                          validator: (input) =>
-                              input != null && !EmailValidator.validate(input)
-                                  ? 'Enter a valid email'
-                                  : null,
-                          decoration: InputDecoration(
-                            labelText: 'Email',
-                            suffixIcon: const Icon(Icons.email),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 3, color: Colors.purple.shade800),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                  width: 3, color: Colors.orange),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            errorBorder: const OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.red, width: 3)),
-                          ),
-                          onSaved: (input) => _email = input.toString()),
-                      const SizedBox(height: 20),
-                      TextFormField(
-                          validator: (input) {
-                            if (input!.length < 6) {
-                              return 'Provide Minimum 6 Character';
-                            }
-                          },
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            suffixIcon: const Icon(Icons.lock),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 3, color: Colors.purple.shade800),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                  width: 3, color: Colors.orange),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            errorBorder: const OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.red, width: 3)),
-                          ),
-                          obscureText: true,
-                          onSaved: (input) => _password = input.toString()),
-                      const SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(70, 10, 70, 10),
-                        child: ElevatedButton(
-                          onPressed: signUp,
-                          child: const Text('Sign Up',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold)),
-                          style: ButtonStyle(
-                            padding: MaterialStateProperty.all(
-                                const EdgeInsets.all(20)),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        TextFormField(
+                            validator: (input) =>
+                                input != null && !EmailValidator.validate(input)
+                                    ? 'Enter a valid email'
+                                    : null,
+                            decoration: InputDecoration(
+                              labelText: 'Email',
+                              suffixIcon: const Icon(Icons.email),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 3, color: Colors.purple.shade800),
+                                borderRadius: BorderRadius.circular(15),
                               ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    width: 3, color: Colors.orange),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              errorBorder: const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.red, width: 3)),
                             ),
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                                if (states.contains(MaterialState.pressed)) {
-                                  return Colors.green;
-                                }
-                                return Colors.orange;
-                              },
+                            onSaved: (input) => _email = input.toString()),
+                        const SizedBox(height: 20),
+                        TextFormField(
+                            validator: (input) {
+                              if (input!.length < 6) {
+                                return 'Provide Minimum 6 Character';
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              suffixIcon: const Icon(Icons.lock),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 3, color: Colors.purple.shade800),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    width: 3, color: Colors.orange),
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              errorBorder: const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.red, width: 3)),
+                            ),
+                            obscureText: true,
+                            onSaved: (input) => _password = input.toString()),
+                        const SizedBox(height: 20),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(70, 10, 70, 10),
+                          child: ElevatedButton(
+                            onPressed: signUp,
+                            child: const Text('Sign Up',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.bold)),
+                            style: ButtonStyle(
+                              padding: MaterialStateProperty.all(
+                                  const EdgeInsets.all(20)),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                                  if (states.contains(MaterialState.pressed)) {
+                                    return Colors.green;
+                                  }
+                                  return Colors.orange;
+                                },
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const Text("OR", textAlign: TextAlign.center),
-                      const SizedBox(height: 20.0),
-                      SignInButton(Buttons.Google,
-                          text: "Sign up with Google", onPressed: googleSignIn),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          const Text("Already have an account?"),
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              textStyle: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 15,
+                        const Text("OR", textAlign: TextAlign.center),
+                        const SizedBox(height: 20.0),
+                        SignInButton(Buttons.Google,
+                            text: "Sign up with Google",
+                            onPressed: googleSignIn),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            const Text("Already have an account?"),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                textStyle: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15,
+                                ),
+                                primary: Colors.orange,
                               ),
-                              primary: Colors.orange,
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const LoginPage()));
+                              },
+                              child: const Text('Login'),
                             ),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const LoginPage()));
-                            },
-                            child: const Text('Login'),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
       ),
+      onWillPop: () async {
+        return true;
+      },
     );
   }
 }

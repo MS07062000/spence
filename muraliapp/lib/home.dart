@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:muraliapp/addproductpage.dart';
 import 'package:muraliapp/card_widget.dart';
 import 'package:muraliapp/categories_widget/bakery_screen.dart';
 import 'package:muraliapp/categories_widget/dairy_screen.dart';
@@ -64,38 +63,25 @@ class _Homepage extends State<HomepageWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Spence'),
-          backgroundColor: Colors.orange,
-          actions: <Widget>[
-            Padding(
-                padding: const EdgeInsets.only(right: 20.0),
-                child: GestureDetector(
-                  onTap: () async {
-                    await signOut();
-                  },
-                  child: const Icon(
-                    Icons.logout,
-                    size: 26.0,
-                  ),
-                )),
-          ],
-        ),
-        body: const MyCustomForm(),
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(right: 25),
-          child: FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const AddproductpageWidget()),
-              );
-            },
-            child: const Icon(Icons.add),
-            backgroundColor: Colors.orange,
-          ),
-        ));
+      appBar: AppBar(
+        title: const Text('Spence'),
+        backgroundColor: Colors.orange,
+        actions: <Widget>[
+          Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () async {
+                  await signOut();
+                },
+                child: const Icon(
+                  Icons.logout,
+                  size: 26.0,
+                ),
+              )),
+        ],
+      ),
+      body: const MyCustomForm(),
+    );
   }
 }
 
@@ -104,8 +90,6 @@ class MyCustomForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //num2 = 0, num3 = 0, num4 = 0, num5 = 0;
-
     FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)

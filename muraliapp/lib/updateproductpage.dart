@@ -1,17 +1,15 @@
 import 'dart:core';
 import 'dart:io';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:muraliapp/home2.dart';
-import 'package:muraliapp/login_signup_widgets/login.dart';
-import 'package:timezone/timezone.dart' as tz;
+import 'package:muraliapp/notifications.dart';
 
 class UpdateproductpageWidget extends StatefulWidget {
   final String manufacturingdate;
@@ -145,8 +143,6 @@ class MyCustomForm extends StatefulWidget {
 }
 
 class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
-  late FlutterLocalNotificationsPlugin fltrNotifications;
-
   File? _pickedImage;
   late String url;
   final _formGlobalKey = GlobalKey<FormState>();
@@ -183,16 +179,6 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
     category = widget.category_1;
     dateController1.text = widget.manufacturingdate_1;
     dateController2.text = widget.expirydate_1;
-    nameofproduct.addListener(() {
-      print(nameofproduct.text);
-    });
-    var androidInitilize = const AndroidInitializationSettings('app_icon');
-    var iOSinitilize = const IOSInitializationSettings();
-    var initilizationsSettings =
-        InitializationSettings(android: androidInitilize, iOS: iOSinitilize);
-    fltrNotifications = FlutterLocalNotificationsPlugin();
-    fltrNotifications.initialize(initilizationsSettings,
-        onSelectNotification: notificationSelected());
   }
 
   void _trysubmit() async {
@@ -274,40 +260,28 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
           "Additional Information": additionalinfo.text,
           "Uniqueid": widget.uniqueid_1,
         });
-        await FlutterLocalNotificationsPlugin().cancel(widget.uniqueid_1);
-        _showNotification(
+        createExpiryNotification(
             widget.uniqueid_1,
             nameofproduct.text,
             day2 != null
-                ? days_calculation(DateTime.now(), day2!)
-                : days_calculation(DateTime.now(), day3!));
+                ? NotificationCalendar(
+                    year: day2!.subtract(const Duration(days: 1)).year,
+                    month: day2!.subtract(const Duration(days: 1)).month,
+                    day: day2!.subtract(const Duration(days: 1)).day,
+                    hour: 10,
+                    minute: 0)
+                : NotificationCalendar(
+                    year: day3!.subtract(const Duration(days: 1)).year,
+                    month: day3!.subtract(const Duration(days: 1)).month,
+                    day: day3!.subtract(const Duration(days: 1)).day,
+                    hour: 10,
+                    minute: 0));
 
         Navigator.canPop(context) ? Navigator.pop(context) : null;
       } finally {
         setState(() {});
       }
     }
-  }
-
-  Future _showNotification(int id, String name, int exday) async {
-    var androidDetails = const AndroidNotificationDetails(
-        "Channel ID", "Channel name",
-        importance: Importance.max);
-    var iSODetails = const IOSNotificationDetails();
-    var generalNotificationDetails =
-        NotificationDetails(android: androidDetails, iOS: iSODetails);
-
-    fltrNotifications.zonedSchedule(
-        id,
-        'Expiring Tomorrow',
-        'Your product ' +
-            name +
-            ' is going to be expired tomorrow. Please use it today or remove it.',
-        tz.TZDateTime.now(tz.local).add(Duration(days: exday - 2, hours: 10)),
-        generalNotificationDetails,
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
   }
 
   Future _pickImageCamera() async {
@@ -733,21 +707,5 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
         ],
       ),
     );
-  }
-
-  notificationSelected() async {
-    _auth.authStateChanges().listen((user) {
-      if (user != null) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Homepage2Widget()),
-        );
-      } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-        );
-      }
-    });
   }
 }

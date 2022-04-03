@@ -1,6 +1,8 @@
 import 'dart:core';
 import 'dart:io';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:muraliapp/global_method.dart';
 import 'package:intl/intl.dart';
@@ -9,14 +11,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:muraliapp/home.dart';
-import 'package:muraliapp/home2.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:muraliapp/login_signup_widgets/login.dart';
-import 'package:timezone/timezone.dart' as tz;
+import 'package:muraliapp/notifications.dart';
 
 class AddproductpageWidget extends StatefulWidget {
-  const AddproductpageWidget({Key? key}) : super(key: key);
+  final CupertinoTabController controller;
+  final GlobalKey<NavigatorState> navigatorKey;
+  const AddproductpageWidget(this.controller, this.navigatorKey);
 
   @override
   State<AddproductpageWidget> createState() => _Addproduct();
@@ -27,23 +27,13 @@ class _Addproduct extends State<AddproductpageWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text(
-            'Add Product',
-            style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
-          ),
-          backgroundColor: Colors.orange,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              /*Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const Homepage2Widget()),
-              );*/
-              Navigator.of(context).pop();
-            },
-          )),
-      body: const MyCustomForm(),
+        title: const Text(
+          'Add Product',
+          style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
+        ),
+        backgroundColor: Colors.orange,
+      ),
+      body: MyCustomForm(widget.controller, widget.navigatorKey),
     );
   }
 }
@@ -83,24 +73,18 @@ _inputdec2(String text, IconData text2) {
 }
 
 class MyCustomForm extends StatefulWidget {
-  const MyCustomForm({Key? key}) : super(key: key);
+  final CupertinoTabController controller1;
+  final GlobalKey<NavigatorState> navigatorKey1;
+  const MyCustomForm(this.controller1, this.navigatorKey1);
 
   @override
   State<MyCustomForm> createState() => _MyCustomStatefulWidgetState();
 }
 
 class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
-  late FlutterLocalNotificationsPlugin fltrNotifications;
   @override
   void initState() {
     super.initState();
-    var androidInitilize = const AndroidInitializationSettings('app_icon');
-    var iOSinitilize = const IOSInitializationSettings();
-    var initilizationsSettings =
-        InitializationSettings(android: androidInitilize, iOS: iOSinitilize);
-    fltrNotifications = FlutterLocalNotificationsPlugin();
-    fltrNotifications.initialize(initilizationsSettings,
-        onSelectNotification: notificationSelected());
   }
 
   File? _pickedImage;
@@ -151,7 +135,8 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
               .child(_nameofproduct.text + '.jpg');
           await ref.putFile(_pickedImage!);
           url = await ref.getDownloadURL();
-          int uniqueid = DateTime.now().millisecondsSinceEpoch;
+          int uniqueid =
+              DateTime.now().millisecondsSinceEpoch.remainder(100000);
           _formGlobalKey.currentState!.save();
           Map<String, dynamic> data = {
             "Name": _nameofproduct.text,
@@ -180,41 +165,60 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
               .doc(_uid)
               .collection("user_orders")
               .doc("count")
-              .update({data[category]: FieldValue.increment(1)});
-          _showNotification(
-              uniqueid,
-              _nameofproduct.text,
-              day2 != null
+              .update({category: FieldValue.increment(1)});
+          if ((day2 != null
                   ? days_calculation(DateTime.now(), day2!)
-                  : days_calculation(DateTime.now(), day3!));
-          Navigator.canPop(context) ? Navigator.pop(context) : null;
+                  : days_calculation(DateTime.now(), day3!)) <
+              2) {
+            createExpiryNotification(
+                uniqueid,
+                _nameofproduct.text,
+                NotificationCalendar(
+                    year: DateTime.now().year,
+                    month: DateTime.now().month,
+                    day: DateTime.now().day,
+                    hour: DateTime.now().hour,
+                    minute: DateTime.now().minute + 2));
+          } else {
+            createExpiryNotification(
+                uniqueid,
+                _nameofproduct.text,
+                day2 != null
+                    ? NotificationCalendar(
+                        year: day2!.subtract(const Duration(days: 1)).year,
+                        month: day2!.subtract(const Duration(days: 1)).month,
+                        day: day2!.subtract(const Duration(days: 1)).day,
+                        hour: 10,
+                        minute: 0)
+                    : NotificationCalendar(
+                        year: day3!.subtract(const Duration(days: 1)).year,
+                        month: day3!.subtract(const Duration(days: 1)).month,
+                        day: day3!.subtract(const Duration(days: 1)).day,
+                        hour: 10,
+                        minute: 0));
+          }
+
+          if (category == 'Bakery') {
+            widget.navigatorKey1.currentState!.pushNamed("Bakery");
+          } else if (category == 'Dairy') {
+            widget.navigatorKey1.currentState!.pushNamed("Dairy");
+          } else if (category == 'Medicine') {
+            widget.navigatorKey1.currentState!.pushNamed("Medicine");
+          } else if (category == 'Frozen Food') {
+            widget.navigatorKey1.currentState!.pushNamed("Frozen Food");
+          } else {
+            widget.navigatorKey1.currentState!.pushNamed("Others");
+          }
+          widget.controller1.index = 0;
+          /*Navigator.of(context, rootNavigator: true).push(CupertinoPageRoute(
+            builder: (BuildContext context) => const lottie_AnimationWidget(),
+          ));*/
           _formGlobalKey.currentState!.reset();
         }
       } finally {
         setState(() {});
       }
     }
-  }
-
-  Future _showNotification(int id, String name, int exday) async {
-    var androidDetails = const AndroidNotificationDetails(
-        "Channel ID", "Channel name",
-        importance: Importance.max);
-    var iSODetails = const IOSNotificationDetails();
-    var generalNotificationDetails =
-        NotificationDetails(android: androidDetails, iOS: iSODetails);
-
-    fltrNotifications.zonedSchedule(
-        id,
-        'Expiring Tomorrow',
-        'Your product ' +
-            name +
-            ' is going to be expired tomorrow. Please use it today or remove it.',
-        tz.TZDateTime.now(tz.local).add(Duration(days: exday - 2, hours: 10)),
-        generalNotificationDetails,
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
   }
 
   Future _pickImageCamera() async {
@@ -679,21 +683,5 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
         ],
       ),
     );
-  }
-
-  notificationSelected() async {
-    _auth.authStateChanges().listen((user) {
-      if (user != null) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Homepage2Widget()),
-        );
-      } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-        );
-      }
-    });
   }
 }

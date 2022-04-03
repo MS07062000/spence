@@ -158,6 +158,7 @@ class _LoginState extends State<LoginPage> {
                               if (input!.length < 6) {
                                 return 'Provide Minimum 6 Character';
                               }
+                              return null;
                             },
                             decoration: InputDecoration(
                               labelText: 'Password',

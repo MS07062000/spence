@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:muraliapp/categories_widget/card2.dart';
-import 'package:muraliapp/home2.dart';
 
 class OthersWidget extends StatefulWidget {
   const OthersWidget({Key? key}) : super(key: key);
@@ -51,10 +50,6 @@ class _Otherspage extends State<OthersWidget> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            /*Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const HomepageWidget()),
-            );*/
             Navigator.of(context).pop();
           },
         ),
@@ -95,7 +90,7 @@ class _Otherspage extends State<OthersWidget> {
             }).toList(),
           );
         },
-      ), //bottomNavigationBar: const BottomNavigationBarWidget(),
+      ),
     );
   }
 }
