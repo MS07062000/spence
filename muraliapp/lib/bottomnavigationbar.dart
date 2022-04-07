@@ -9,7 +9,6 @@ import 'package:muraliapp/categories_widget/others.dart';
 import 'package:muraliapp/expiringsoon.dart';
 import 'package:muraliapp/garbagereport.dart';
 import 'package:muraliapp/home.dart';
-import 'package:muraliapp/home2.dart';
 
 /// This is the stateful widget that the main application instantiates.
 // ignore: must_be_immutable
