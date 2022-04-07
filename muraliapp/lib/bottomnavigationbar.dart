@@ -7,6 +7,7 @@ import 'package:muraliapp/categories_widget/frozen_food_screen.dart';
 import 'package:muraliapp/categories_widget/medicine_screen.dart';
 import 'package:muraliapp/categories_widget/others.dart';
 import 'package:muraliapp/expiringsoon.dart';
+import 'package:muraliapp/garbagereport.dart';
 import 'package:muraliapp/home.dart';
 import 'package:muraliapp/home2.dart';
 
@@ -130,7 +131,7 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
               navigatorKey: navigatorKeyList[index],
               routes: {
                 '/': (context) => WillPopScope(
-                      child: HomeTab(),
+                      child: garbagereportWidget(),
                       onWillPop: () => Future<bool>.value(true),
                     ),
                 'Bakery': (context) => BakeryWidget(),
@@ -138,6 +139,7 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
                 'Medicine': (context) => MedicineWidget(),
                 'Frozen Food': (context) => FrozenFoodWidget(),
                 'Others': (context) => OthersWidget(),
+                'Garbage': (context) => garbagereportWidget(),
               },
             );
           case 4:

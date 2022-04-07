@@ -19,6 +19,7 @@ void main() async {
       projectId: "spence-38472",
     ),
   );
+
   AwesomeNotifications().initialize(
     'resource://drawable/app_icon',
     [

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:muraliapp/categories_widget/card2.dart';
+import 'package:muraliapp/countdowntimer.dart';
 import 'package:muraliapp/home2.dart';
 
 class BakeryWidget extends StatefulWidget {
@@ -77,8 +78,11 @@ class _Bakerypage extends State<BakeryWidget> {
 
           return ListView(
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
+              //countdowntimer(FirebaseAuth.instance.currentUser,document.id, data[])
               Map<String, dynamic> data =
                   document.data()! as Map<String, dynamic>;
+              countdowntimer(FirebaseAuth.instance.currentUser, document.id,
+                  data['Expiry Date'], data['Name'], data['Category']);
               return Card2Widget(
                 docid: document.id,
                 name: data['Name'],

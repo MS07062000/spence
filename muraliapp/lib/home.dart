@@ -114,6 +114,32 @@ class MyCustomForm extends StatelessWidget {
             .set(data);
       }
     });
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("user_orders")
+        .doc("count2")
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+      } else {
+        Map<String, dynamic> data = {
+          "Bakery": 0,
+          "Dairy": 0,
+          "Medicine": 0,
+          "Frozen Food": 0,
+          "Others": 0,
+        };
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection("user_orders")
+            .doc("count2")
+            .set(data);
+      }
+    });
+
     List<String> _value = [
       'Bakery',
       'Dairy',

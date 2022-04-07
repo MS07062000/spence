@@ -39,9 +39,9 @@ class Homepage extends State<Homepage2Widget> {
       setState(() {
         user = firebaseUser!;
         isloggedin = true;
-        Cron().schedule(Schedule.parse('*/5 * * * *'), () async {
-          countdowntimer();
-        });
+        //Cron().schedule(Schedule.parse('*/1 * * * *'), () async {
+        //countdowntimer(firebaseUser);
+        //});
       });
     }
   }

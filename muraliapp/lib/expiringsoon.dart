@@ -83,7 +83,6 @@ class _Expiringsoon extends State<ExpiringsoonpageWidget> {
           );
         },
       ),
-      //bottomNavigationBar: const BottomNavigationBarWidget(),
     );
   }
 }
