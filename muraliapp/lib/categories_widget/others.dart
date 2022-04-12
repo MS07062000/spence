@@ -89,6 +89,7 @@ class _Otherspage extends State<OthersWidget> {
                 additionalinformation: data['Additional Information'],
                 category: data['Category'],
                 uniqueid: data['Uniqueid'],
+                modifiedname: data['ModifiedName'],
               );
             }).toList(),
           );

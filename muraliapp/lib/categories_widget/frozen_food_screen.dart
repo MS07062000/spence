@@ -81,6 +81,7 @@ class _FrozenFoodpage extends State<FrozenFoodWidget> {
                   data['Expiry Date'], data['Name'], data['Category']);
               return Card2Widget(
                 docid: document.id,
+                modifiedname: data['ModifiedName'],
                 name: data['Name'],
                 expirydate: data['Expiry Date'],
                 image: data['Product Image'],

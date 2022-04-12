@@ -190,6 +190,7 @@ class _Medicinepage extends State<MedicineWidget> {
               Map<String, dynamic> data =
                   document.data()! as Map<String, dynamic>;*/
                 return Card2Widget(
+                  modifiedname: data.docs[index].data().modifiedname,
                   docid: data.docs[index].data().docid,
                   name: data.docs[index].data().name, //data['Name'],
                   expirydate:
@@ -209,7 +210,7 @@ class _Medicinepage extends State<MedicineWidget> {
               }); //.toList(),
           //);
         },
-      ), //bottomNavigationBar: const BottomNavigationBarWidget(),
+      ),
     );
   }
 }

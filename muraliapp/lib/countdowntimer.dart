@@ -46,6 +46,26 @@ void countdowntimer(user, id, date, name, category) {
         .doc("count2")
         .update({category: FieldValue.increment(1)});
 
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("notification")
+        .doc("count")
+        .update({
+      "length2": FieldValue.increment(1),
+      "length": FieldValue.increment(1),
+    });
+    Map<String, dynamic> data = {
+      "Name": name,
+      "Expiry Date": date,
+      "color": 1,
+    };
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("notification")
+        .add(data);
+
     FirebaseStorage.instance
         .ref()
         .child('usersImages')

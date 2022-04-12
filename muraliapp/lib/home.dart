@@ -118,6 +118,28 @@ class MyCustomForm extends StatelessWidget {
     FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("notification")
+        .doc("count")
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+      } else {
+        Map<String, dynamic> data = {
+          "length": 0,
+          "length2": 0,
+        };
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .collection("notification")
+            .doc("count")
+            .set(data);
+      }
+    });
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection("user_orders")
         .doc("count2")
         .get()

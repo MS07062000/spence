@@ -5,6 +5,7 @@ class Branch {
   const Branch({
     required this.docid,
     required this.name,
+    required this.modifiedname,
     required this.manufacturingdate,
     required this.expirydate,
     required this.expirydays,
@@ -20,6 +21,7 @@ class Branch {
       : this(
             docid: json['docid']! as String,
             name: json['Name']! as String,
+            modifiedname: json['ModifiedName']! as String,
             manufacturingdate: json['Manufacturing Date']! as String,
             expirydate: json["Expiry Date"]! as String,
             expirydays: json["Expiry Days"]! as int,
@@ -39,6 +41,7 @@ class Branch {
   final String category;
   final String productimage;
   final String name;
+  final String modifiedname;
   final String docid;
   final int uniqueid;
 
@@ -46,6 +49,7 @@ class Branch {
     return {
       'Doc Id': docid,
       'Name': name,
+      'ModifiedName': modifiedname,
       'Manufacturing Date': manufacturingdate,
       'Expiry Days': expirydays,
       'Expiry Date': expirydate,

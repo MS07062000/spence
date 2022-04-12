@@ -87,6 +87,7 @@ class _Dairypage extends State<DairyWidget> {
               return Card2Widget(
                 docid: document.id,
                 name: data['Name'],
+                modifiedname: data['ModifiedName'],
                 expirydate: data['Expiry Date'],
                 image: data['Product Image'],
                 quantity: data['Quantity'],

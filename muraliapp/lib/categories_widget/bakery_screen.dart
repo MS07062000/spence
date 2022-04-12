@@ -86,6 +86,7 @@ class _Bakerypage extends State<BakeryWidget> {
               return Card2Widget(
                 docid: document.id,
                 name: data['Name'],
+                modifiedname: data['ModifiedName'],
                 expirydate: data['Expiry Date'],
                 image: data['Product Image'],
                 quantity: data['Quantity'],

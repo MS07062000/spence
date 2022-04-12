@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:muraliapp/updateproductpage.dart';
 import 'package:muraliapp/notifications.dart';
@@ -8,6 +9,7 @@ import 'package:muraliapp/notifications.dart';
 class Card2Widget extends StatefulWidget {
   final String docid;
   final String name;
+  final String modifiedname;
   final String expirydate;
   final String quantity;
   final String image;
@@ -23,6 +25,7 @@ class Card2Widget extends StatefulWidget {
     required this.docid,
     required this.image,
     required this.name,
+    required this.modifiedname,
     required this.expirydate,
     required this.quantity,
     required this.manufacturingdate,
@@ -38,85 +41,172 @@ class Card2Widget extends StatefulWidget {
 }
 
 class _MyCardWidgetState extends State<Card2Widget> {
+  Color getColour() {
+    if (widget.expirydays > 30 && widget.expirydays < 90) {
+      return Colors.teal.shade800;
+    } else if (widget.expirydays > 90 && widget.expirydays < 120) {
+      return Colors.green.shade800;
+    } else if (widget.expirydays > 180 && widget.expirydays < 365) {
+      return Colors.blue;
+    } else if (widget.expirydays > 365) {
+      return Colors.pink.shade800;
+    } else {
+      return Colors.red;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Container(
-        height: 100,
-        color: Colors.white,
-        child: Row(
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.25,
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Image.network(widget.image, fit: BoxFit.cover),
+      child: ClipPath(
+        clipper: ShapeBorderClipper(
+            shape: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: Colors.orange, width: 1))),
+        child: Container(
+          height: 106,
+          color: Colors.white,
+          child: Row(
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.25,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Image.network(widget.image, fit: BoxFit.cover),
+                ),
               ),
-            ),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Text(
-                      widget.name,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16.0,
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Text(
+                        widget.name,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16.0,
+                        ),
                       ),
-                    ),
-                    Text(
-                      "Expires on " + widget.expirydate,
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                    Text(
-                      widget.quantity,
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                  ],
+                      Text(
+                        "Expires in " + widget.expirydays.toString() + " days",
+                        style: TextStyle(color: getColour()),
+                      ),
+                      Text(
+                        widget.quantity,
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                IconButton(
-                  color: Colors.orange,
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => UpdateproductpageWidget(
-                                  name: widget.name,
-                                  manufacturingdate: widget.manufacturingdate,
-                                  expirydays: widget.expirydays,
-                                  expirydate: widget.expirydate,
-                                  quantity: widget.quantity,
-                                  location: widget.location,
-                                  additionalinformation:
-                                      widget.additionalinformation,
-                                  category: widget.category,
-                                  productimage: widget.image,
-                                  docid: widget.docid,
-                                  uniqueid: widget.uniqueid,
-                                )));
-                  },
-                  icon: const Icon(Icons.edit),
-                ),
-                IconButton(
-                  color: Colors.orange,
-                  onPressed: () {
-                    showError();
-                  },
-                  icon: const Icon(Icons.delete),
-                )
-              ],
-            ),
-          ],
+              Column(
+                children: <Widget>[
+                  CupertinoButton(
+                    minSize: double.minPositive,
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Dialog(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              insetPadding: EdgeInsets.all(5),
+                              elevation: 8,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                      child: Text(
+                                    "Details",
+                                    style: TextStyle(
+                                        color: Colors.blue, fontSize: 20),
+                                  )),
+                                  Container(
+                                    child: Table(
+                                      columnWidths: {
+                                        0: FractionColumnWidth(0.5),
+                                        1: FractionColumnWidth(0.5),
+                                      },
+                                      defaultVerticalAlignment:
+                                          TableCellVerticalAlignment.middle,
+                                      textDirection: TextDirection.ltr,
+                                      children: [
+                                        buildRow(
+                                            [' Name:', widget.name.toString()]),
+                                        buildRow([
+                                          ' Manufatcuring Date:',
+                                          widget.manufacturingdate.toString()
+                                        ]),
+                                        buildRow([
+                                          ' Expiry Date:',
+                                          widget.expirydate.toString()
+                                        ]),
+                                        buildRow([
+                                          ' Quantity:',
+                                          widget.quantity.toString()
+                                        ]),
+                                        buildRow([
+                                          ' Location:',
+                                          widget.location.toString()
+                                        ]),
+                                        buildRow([
+                                          ' Additional Information:',
+                                          widget.additionalinformation
+                                              .toString()
+                                        ]),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          });
+                    },
+                    child: const Icon(
+                      Icons.more_horiz,
+                      color: Colors.orange,
+                    ),
+                  ),
+                  CupertinoButton(
+                    minSize: double.minPositive,
+                    padding: EdgeInsets.all(8.0),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => UpdateproductpageWidget(
+                                    modifiedname: widget.modifiedname,
+                                    name: widget.name,
+                                    manufacturingdate: widget.manufacturingdate,
+                                    expirydays: widget.expirydays,
+                                    expirydate: widget.expirydate,
+                                    quantity: widget.quantity,
+                                    location: widget.location,
+                                    additionalinformation:
+                                        widget.additionalinformation,
+                                    category: widget.category,
+                                    docid: widget.docid,
+                                    uniqueid: widget.uniqueid,
+                                  )));
+                    },
+                    child: const Icon(Icons.edit, color: Colors.orange),
+                  ),
+                  CupertinoButton(
+                    minSize: double.minPositive,
+                    padding: EdgeInsets.all(8.0),
+                    onPressed: () {
+                      showError();
+                    },
+                    child: const Icon(Icons.delete, color: Colors.orange),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       elevation: 8,
@@ -150,7 +240,7 @@ class _MyCardWidgetState extends State<Card2Widget> {
         .ref()
         .child('usersImages')
         .child(_uid)
-        .child(widget.name + '.jpg')
+        .child(widget.modifiedname + '.jpg')
         .delete();
   }
 
@@ -176,4 +266,15 @@ class _MyCardWidgetState extends State<Card2Widget> {
           );
         });
   }
+
+  TableRow buildRow(List<String> cells) => TableRow(
+        children: cells
+            .map((cell) => Padding(
+                padding: EdgeInsets.all(5),
+                child: Text(
+                  cell,
+                  textAlign: TextAlign.left,
+                )))
+            .toList(),
+      );
 }

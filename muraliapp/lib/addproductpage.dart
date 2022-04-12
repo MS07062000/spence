@@ -89,23 +89,37 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
 
   File? _pickedImage;
   String? url;
-  final _formGlobalKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _formGlobalKey = GlobalKey<FormState>();
   var date2 = "";
   var date3 = "";
   String unit = "Android";
   String category = "Bakery";
-  final _nameofproduct = TextEditingController();
-  final _dateController1 = TextEditingController();
-  final _dateController2 = TextEditingController();
-  final _dateController3 = TextEditingController();
-  final _location = TextEditingController();
-  final _additionalinfo = TextEditingController();
-  final _quantitycontroller = TextEditingController();
+  final _nameofproduct = new TextEditingController();
+  final _dateController1 = new TextEditingController();
+  final _dateController2 = new TextEditingController();
+  final _dateController3 = new TextEditingController();
+  final _location = new TextEditingController();
+  final _additionalinfo = new TextEditingController();
+  final _quantitycontroller = new TextEditingController();
   final GlobalMethods _globalMethods = GlobalMethods();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   late DateTime day1;
   DateTime? day2;
   DateTime? day3;
+
+  void clearformfield() {
+    _formGlobalKey.currentState!.reset();
+    _pickedImage = null;
+    unit = "Android";
+    category = "Bakery";
+    _nameofproduct.clear();
+    _dateController1.clear();
+    _dateController2.clear();
+    _dateController3.clear();
+    _location.clear();
+    _additionalinfo.clear();
+    _quantitycontroller.clear();
+  }
 
   void _trysubmit() async {
     bool isvalid;
@@ -125,7 +139,6 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
         if (_pickedImage == null) {
           _globalMethods.authErrorHandle('Please pick an image', context);
         } else {
-          setState(() {});
           final User? user = _auth.currentUser;
           final _uid = user!.uid;
           final ref = FirebaseStorage.instance
@@ -139,6 +152,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
               DateTime.now().millisecondsSinceEpoch.remainder(100000);
           _formGlobalKey.currentState!.save();
           Map<String, dynamic> data = {
+            "ModifiedName": _nameofproduct.text,
             "Name": _nameofproduct.text,
             "Manufacturing Date": _dateController1.text,
             "Expiry Date": day2 != null
@@ -166,6 +180,9 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
               .collection("user_orders")
               .doc("count")
               .update({category: FieldValue.increment(1)});
+
+          String localTimeZone =
+              await AwesomeNotifications().getLocalTimeZoneIdentifier();
           if ((day2 != null
                   ? days_calculation(DateTime.now(), day2!)
                   : days_calculation(DateTime.now(), day3!)) <
@@ -174,6 +191,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                 uniqueid,
                 _nameofproduct.text,
                 NotificationCalendar(
+                    timeZone: localTimeZone,
                     year: DateTime.now().year,
                     month: DateTime.now().month,
                     day: DateTime.now().day,
@@ -185,20 +203,24 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                 _nameofproduct.text,
                 day2 != null
                     ? NotificationCalendar(
+                        timeZone: localTimeZone,
                         year: day2!.subtract(const Duration(days: 1)).year,
                         month: day2!.subtract(const Duration(days: 1)).month,
                         day: day2!.subtract(const Duration(days: 1)).day,
                         hour: 10,
-                        minute: 0)
+                        minute: 0,
+                        second: 0)
                     : NotificationCalendar(
                         year: day3!.subtract(const Duration(days: 1)).year,
                         month: day3!.subtract(const Duration(days: 1)).month,
                         day: day3!.subtract(const Duration(days: 1)).day,
                         hour: 10,
-                        minute: 0));
+                        minute: 0,
+                        second: 0));
           }
 
           if (category == 'Bakery') {
+            _formGlobalKey.currentState!.reset();
             widget.navigatorKey1.currentState!.pushNamed("Bakery");
           } else if (category == 'Dairy') {
             widget.navigatorKey1.currentState!.pushNamed("Dairy");
@@ -209,15 +231,10 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
           } else {
             widget.navigatorKey1.currentState!.pushNamed("Others");
           }
+          //clearformfield();
           widget.controller1.index = 0;
-          /*Navigator.of(context, rootNavigator: true).push(CupertinoPageRoute(
-            builder: (BuildContext context) => const lottie_AnimationWidget(),
-          ));*/
-          _formGlobalKey.currentState!.reset();
         }
-      } finally {
-        setState(() {});
-      }
+      } finally {}
     }
   }
 

@@ -1,14 +1,10 @@
 import 'dart:core';
-import 'dart:io';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:muraliapp/notifications.dart';
 
 class UpdateproductpageWidget extends StatefulWidget {
@@ -19,10 +15,10 @@ class UpdateproductpageWidget extends StatefulWidget {
   final String location;
   final String additionalinformation;
   final String category;
-  final String productimage;
   final String name;
   final String docid;
   final int uniqueid;
+  final String modifiedname;
 
   const UpdateproductpageWidget(
       {Key? key,
@@ -33,9 +29,9 @@ class UpdateproductpageWidget extends StatefulWidget {
       required this.location,
       required this.additionalinformation,
       required this.category,
-      required this.productimage,
       required this.expirydays,
       required this.quantity,
+      required this.modifiedname,
       required this.uniqueid})
       : super(key: key);
 
@@ -67,10 +63,10 @@ class _Updateproduct extends State<UpdateproductpageWidget> {
         location_1: widget.location,
         additionalinformation_1: widget.additionalinformation,
         category_1: widget.category,
-        productimage_1: widget.productimage,
         name_1: widget.name,
         docid_1: widget.docid,
         uniqueid_1: widget.uniqueid,
+        modifiedname_1: widget.modifiedname,
       ),
     );
   }
@@ -118,7 +114,7 @@ class MyCustomForm extends StatefulWidget {
   final String location_1;
   final String additionalinformation_1;
   final String category_1;
-  final String productimage_1;
+  final String modifiedname_1;
   final String name_1;
   final String docid_1;
   final int uniqueid_1;
@@ -128,12 +124,12 @@ class MyCustomForm extends StatefulWidget {
       required this.docid_1,
       required this.uniqueid_1,
       required this.name_1,
+      required this.modifiedname_1,
       required this.manufacturingdate_1,
       required this.expirydate_1,
       required this.location_1,
       required this.additionalinformation_1,
       required this.category_1,
-      required this.productimage_1,
       required this.expirydays_1,
       required this.quantity_1})
       : super(key: key);
@@ -143,8 +139,6 @@ class MyCustomForm extends StatefulWidget {
 }
 
 class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
-  File? _pickedImage;
-  late String url;
   final _formGlobalKey = GlobalKey<FormState>();
   var date2 = "";
   var date3 = "";
@@ -215,38 +209,13 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
         setState(() {});
         final User? user = _auth.currentUser;
         final _uid = user!.uid;
-        if (nameofproduct != widget.name_1 && _pickedImage == null) {
-          var fileUrl = File('gs://spence-38472.appspot.com/usersImages/' +
-              widget.name_1 +
-              '.jpg');
-
-          FirebaseStorage storage = FirebaseStorage.instance;
-          storage
-              .ref()
-              .child('usersImages')
-              .child(_uid)
-              .child(nameofproduct.text + 'jpg');
-          await storage.ref().putFile(fileUrl);
-          url = await storage.ref().getDownloadURL();
-          storage.refFromURL(widget.productimage_1).delete();
-        }
-        if (_pickedImage != null) {
-          FirebaseStorage storage = FirebaseStorage.instance;
-          storage.refFromURL(widget.productimage_1).delete();
-          storage
-              .ref()
-              .child('usersImages')
-              .child(_uid)
-              .child(nameofproduct.text + '.jpg');
-          await storage.ref().putFile(_pickedImage!);
-          url = await storage.ref().getDownloadURL();
-        }
         FirebaseFirestore.instance
             .collection('users')
             .doc(_uid)
             .collection("user_orders")
             .doc(widget.docid_1)
             .update({
+          "ModifiedName": widget.modifiedname_1,
           "Name": nameofproduct.text,
           "Manufacturing Date": dateController1.text,
           "Expiry Date": expirydate(date2, date3),
@@ -254,7 +223,6 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
               ? days_calculation(DateTime.now(), day2!)
               : days_calculation2(DateTime.now(), day3!),
           "Quantity": quantitycontroller.text + " " + unit,
-          'Product Image': url,
           "Category": category,
           "Location": location.text,
           "Additional Information": additionalinfo.text,
@@ -284,150 +252,11 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
     }
   }
 
-  Future _pickImageCamera() async {
-    final picker = ImagePicker();
-    final pickedImage =
-        await picker.pickImage(source: ImageSource.camera, imageQuality: 100);
-    if (pickedImage == null) return;
-    final croppedImage = await ImageCropper().cropImage(
-        sourcePath: pickedImage.path,
-        aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0));
-    final pickedImageFile = File(croppedImage!.path);
-    setState(() {
-      _pickedImage = pickedImageFile;
-    });
-  }
-
-  Future _pickImageGallery() async {
-    final picker = ImagePicker();
-    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
-    final croppedImage = await ImageCropper().cropImage(
-        sourcePath: pickedImage!.path,
-        aspectRatio: const CropAspectRatio(ratioX: 1.0, ratioY: 1.0));
-    final pickedImageFile = File(croppedImage!.path);
-    setState(() {
-      _pickedImage = pickedImageFile;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
-          const SizedBox(
-            height: 10,
-          ),
-          Stack(
-            children: [
-              Container(
-                margin:
-                    const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
-                child: CircleAvatar(
-                  radius: 71,
-                  backgroundColor: Colors.orange,
-                  child: CircleAvatar(
-                    radius: 68,
-                    backgroundColor: Colors.white,
-                    child: ClipOval(
-                      child: _pickedImage == null
-                          ? Image.network(
-                              widget.productimage_1,
-                              fit: BoxFit.cover,
-                            )
-                          : Image.file(
-                              _pickedImage!,
-                              fit: BoxFit.cover,
-                            ),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                  top: 120,
-                  left: 110,
-                  child: RawMaterialButton(
-                    elevation: 10,
-                    fillColor: Colors.white,
-                    child: const Icon(Icons.add_a_photo),
-                    padding: const EdgeInsets.all(15.0),
-                    shape: const CircleBorder(),
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text(
-                                'Choose option',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.orange),
-                              ),
-                              content: SingleChildScrollView(
-                                child: ListBody(
-                                  children: [
-                                    InkWell(
-                                      onTap: () async {
-                                        await _pickImageCamera();
-                                        Navigator.of(context).pop();
-                                      },
-                                      splashColor: Colors.purple,
-                                      child: Row(
-                                        children: const [
-                                          Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: Icon(
-                                              Icons.camera,
-                                              color: Colors.purple,
-                                            ),
-                                          ),
-                                          Text(
-                                            'Camera',
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.purple),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          _pickImageGallery();
-                                        });
-
-                                        Navigator.of(context).pop();
-                                      },
-                                      splashColor: Colors.purple,
-                                      child: Row(
-                                        children: const [
-                                          Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: Icon(
-                                              Icons.image,
-                                              color: Colors.purple,
-                                            ),
-                                          ),
-                                          Text(
-                                            'Gallery',
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.purple),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          });
-                    },
-                  ))
-            ],
-          ),
           Form(
             key: _formGlobalKey,
             child: Column(

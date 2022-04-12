@@ -78,6 +78,7 @@ class _Expiringsoon extends State<ExpiringsoonpageWidget> {
                 additionalinformation: data['Additional Information'],
                 category: data['Category'],
                 uniqueid: data['Uniqueid'],
+                modifiedname: data['ModifiedName'],
               );
             }).toList(),
           );
