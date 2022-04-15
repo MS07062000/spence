@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:muraliapp/bottomnavigationbar.dart';
 import 'package:muraliapp/categories_widget/bakery_screen.dart';
 import 'package:muraliapp/categories_widget/dairy_screen.dart';
 import 'package:muraliapp/categories_widget/frozen_food_screen.dart';
 import 'package:muraliapp/categories_widget/medicine_screen.dart';
 import 'package:muraliapp/categories_widget/others.dart';
+import 'package:muraliapp/login_signup_widgets/login.dart';
 import 'package:muraliapp/login_signup_widgets/welcome.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:muraliapp/home2.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 
 void main() async {
@@ -41,9 +42,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: true,
+      debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
-        "/home": (BuildContext context) => const Homepage2Widget(),
+        "/login": (BuildContext context) => const LoginPage(),
+        "/home": (BuildContext context) => BottomNavigationBarWidget(),
         "/Bakery": (BuildContext context) => const BakeryWidget(),
         "/Dairy": (BuildContext context) => const DairyWidget(),
         "/Medicine": (BuildContext context) => const MedicineWidget(),

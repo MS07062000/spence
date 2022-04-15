@@ -31,6 +31,7 @@ class MyCustomForm extends StatefulWidget {
 }
 
 class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
+  late double num1 = 0.0, num2 = 0.0, num3 = 0.0, num4 = 0.0, num5 = 0.0;
   Stream<DocumentSnapshot> provideDocumentFieldStream() {
     return FirebaseFirestore.instance
         .collection('users')
@@ -42,71 +43,87 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Expanded(
-          flex: 7,
-          child: StreamBuilder<DocumentSnapshot>(
-              stream: provideDocumentFieldStream(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<DocumentSnapshot> snapshot) {
-                if (snapshot.hasError ||
-                    snapshot.connectionState == ConnectionState.waiting) {
-                  return Container(
-                      alignment: Alignment.topCenter,
-                      margin: const EdgeInsets.only(top: 20),
-                      child: const CircularProgressIndicator(
-                        color: Colors.orange,
-                      ));
-                }
-                var doc = snapshot.data as DocumentSnapshot;
-                double num1 = doc.get('Bakery').toDouble();
-                double num2 = doc.get('Dairy').toDouble();
-                double num3 = doc.get('Medicine').toDouble();
-                double num4 = doc.get('Frozen Food').toDouble();
-                double num5 = doc.get('Others').toDouble();
-                Map<String, double> datamap = {
-                  'Bakery': num1,
-                  'Dairy': num2,
-                  'Medicine': num3,
-                  'Frozen Food': num4,
-                  'Others': num5,
-                };
-                return Container(
-                    child: Center(
-                        child: PieChart(
-                  dataMap: datamap,
-                  chartRadius: MediaQuery.of(context).size.width / 1.7,
-                  legendOptions:
-                      LegendOptions(legendPosition: LegendPosition.bottom),
-                  chartValuesOptions:
-                      ChartValuesOptions(showChartValuesInPercentage: true),
-                )));
-              })),
-      Expanded(
-        flex: 1,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: ElevatedButton(
-              onPressed: () => showError(), //deleteUser(),
-              child: const Text(
-                'Reset',
-                style: TextStyle(
-                    color: Color.fromRGBO(49, 27, 146, 1), fontSize: 20),
-              ),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.orange,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+    return StreamBuilder<DocumentSnapshot>(
+        stream: provideDocumentFieldStream(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError ||
+              snapshot.connectionState == ConnectionState.waiting) {
+            return Container(
+                alignment: Alignment.topCenter,
+                margin: const EdgeInsets.only(top: 20),
+                child: const CircularProgressIndicator(
+                  color: Colors.orange,
+                ));
+          }
+          var doc = snapshot.data as DocumentSnapshot;
+          num1 = doc.get('Bakery').toDouble();
+          num2 = doc.get('Dairy').toDouble();
+          num3 = doc.get('Medicine').toDouble();
+          num4 = doc.get('Frozen Food').toDouble();
+          num5 = doc.get('Others').toDouble();
+          Map<String, double> datamap = {
+            'Bakery': num1,
+            'Dairy': num2,
+            'Medicine': num3,
+            'Frozen Food': num4,
+            'Others': num5,
+          };
+          return Column(children: [
+            Expanded(
+              flex: 7,
+              child: (num1 != 0.0 ||
+                      num2 != 0.0 ||
+                      num3 != 0.0 ||
+                      num4 != 0.0 ||
+                      num5 != 0.0)
+                  ? Container(
+                      child: Center(
+                          child: PieChart(
+                      dataMap: datamap,
+                      chartRadius: MediaQuery.of(context).size.width / 1.7,
+                      legendOptions:
+                          LegendOptions(legendPosition: LegendPosition.bottom),
+                      chartValuesOptions:
+                          ChartValuesOptions(showChartValuesInPercentage: true),
+                    )))
+                  : Container(),
+            ),
+            Expanded(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: (num1 != 0.0 ||
+                          num2 != 0.0 ||
+                          num3 != 0.0 ||
+                          num4 != 0.0 ||
+                          num5 != 0.0)
+                      ? ElevatedButton(
+                          onPressed: () {
+                            showError();
+                          }, //deleteUser(),
+                          child: const Text(
+                            'Reset',
+                            style: TextStyle(
+                                color: Color.fromRGBO(49, 27, 146, 1),
+                                fontSize: 20),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.orange,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                        )
+                      : Container(),
                 ),
               ),
             ),
-          ),
-        ),
-      ),
-    ]);
+          ]);
+        });
   }
 
   showError() {

@@ -11,12 +11,12 @@ Future<void> createExpiryNotification(
           name +
           ' is going to be expired tomorrow. Please use it today or remove it.',
     ),
-    actionButtons: [
+    /*actionButtons: [
       NotificationActionButton(
         key: 'Mark_Done',
         label: 'Mark Done',
       )
-    ],
+    ],*/
     schedule: NotificationCalendar(
       year: notificationschedule.year,
       month: notificationschedule.month,
@@ -25,6 +25,7 @@ Future<void> createExpiryNotification(
       minute: notificationschedule.minute,
       second: 0,
       millisecond: 0,
+      timeZone: notificationschedule.timeZone,
     ),
   );
 }

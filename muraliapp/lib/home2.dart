@@ -1,7 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:muraliapp/bottomnavigationbar.dart';
-import 'package:muraliapp/login_signup_widgets/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -20,10 +19,8 @@ class Homepage extends State<Homepage2Widget> {
   checkAuthentification() async {
     _auth.authStateChanges().listen((user) {
       if (user == null) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-        );
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
       }
     });
   }
@@ -37,9 +34,6 @@ class Homepage extends State<Homepage2Widget> {
       setState(() {
         user = firebaseUser!;
         isloggedin = true;
-        //Cron().schedule(Schedule.parse('*/1 * * * *'), () async {
-        //countdowntimer(firebaseUser);
-        //});
       });
     }
   }
@@ -102,6 +96,7 @@ class Homepage extends State<Homepage2Widget> {
           ),
           (route) => route.isFirst);
     });
+    setState(() {});
   }
 
   @override
@@ -112,6 +107,6 @@ class Homepage extends State<Homepage2Widget> {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBarWidget();
+    return Scaffold(body: BottomNavigationBarWidget());
   }
 }

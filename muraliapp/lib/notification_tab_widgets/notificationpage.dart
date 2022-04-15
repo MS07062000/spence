@@ -92,11 +92,10 @@ class _notificationpage extends State<notificationpageWidget> {
 
     return usersStream_2.get().then((querySnapshot) {
       querySnapshot.docs.forEach((document) {
-        if (document != 'count') {
+        if (document.id != 'count') {
           batch.delete(document.reference);
         }
       });
-
       return batch.commit();
     });
   }
@@ -111,14 +110,41 @@ class _notificationpage extends State<notificationpageWidget> {
           ),
           backgroundColor: Colors.orange,
           actions: [
-            IconButton(
-                tooltip: 'Delete All',
-                icon: const Icon(Icons.delete_forever_sharp),
-                onPressed: () {
-                  if (length2 == 0) {
-                  } else {
-                    showError2();
+            StreamBuilder<DocumentSnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                    .collection('notification')
+                    .doc('count')
+                    .snapshots(),
+                builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                  if (snapshot.hasData) {
+                    return snapshot.data!['length2'] != 0
+                        ? Container(
+                            child: IconButton(
+                                tooltip: 'Delete All',
+                                icon: const Icon(
+                                  Icons.delete_forever_sharp,
+                                  color: Color.fromRGBO(49, 27, 146, 1),
+                                ),
+                                onPressed: () {
+                                  showError2();
+                                }))
+                        : Container(
+                            child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.delete_forever_sharp,
+                                  color: Color.fromRGBO(49, 27, 146, 1),
+                                )));
                   }
+                  return Container(
+                      child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.delete_forever_sharp,
+                            color: Color.fromRGBO(49, 27, 146, 1),
+                          )));
                 }),
           ],
         ),

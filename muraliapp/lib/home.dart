@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:muraliapp/card_widget.dart';
@@ -6,9 +7,9 @@ import 'package:muraliapp/categories_widget/dairy_screen.dart';
 import 'package:muraliapp/categories_widget/frozen_food_screen.dart';
 import 'package:muraliapp/categories_widget/medicine_screen.dart';
 import 'package:muraliapp/categories_widget/others.dart';
-import 'package:muraliapp/login_signup_widgets/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:muraliapp/login_signup_widgets/login.dart';
 
 class HomepageWidget extends StatefulWidget {
   const HomepageWidget({Key? key}) : super(key: key);
@@ -19,36 +20,9 @@ class HomepageWidget extends StatefulWidget {
 
 class _Homepage extends State<HomepageWidget> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  late User user;
-  bool isloggedin = false;
-
-  checkAuthentification() async {
-    _auth.authStateChanges().listen((user) {
-      if (user == null) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-        );
-      }
-    });
-  }
-
-  getUser() async {
-    User? firebaseUser = _auth.currentUser;
-    await firebaseUser!.reload();
-    firebaseUser = _auth.currentUser;
-
-    if (firebaseUser != null) {
-      setState(() {
-        user = firebaseUser!;
-        isloggedin = true;
-      });
-    }
-  }
 
   signOut() async {
     _auth.signOut();
-
     final googleSignIn = GoogleSignIn();
     await googleSignIn.signOut();
   }
@@ -56,22 +30,97 @@ class _Homepage extends State<HomepageWidget> {
   @override
   void initState() {
     super.initState();
-    checkAuthentification();
-    getUser();
+    /* AwesomeNotifications().isNotificationAllowed().then(
+      (isAllowed) {
+        if (!isAllowed) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Allow Notifications'),
+              content: Text(
+                  'Our app would like to send you notifications about the expiry of product'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'Don\'t Allow',
+                    style: TextStyle(color: Colors.grey, fontSize: 18),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => AwesomeNotifications()
+                      .requestPermissionToSendNotifications()
+                      .then((_) => Navigator.pop(context)),
+                  child: Text(
+                    'Allow',
+                    style: TextStyle(
+                      color: Colors.orange,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+      },
+    );
+    AwesomeNotifications().actionStream.listen((notification) {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (_) => BottomNavigationBarWidget(),
+          ),
+          (route) => route.isFirst);
+    });*/
+  }
+
+  @override
+  void dispose() {
+    //AwesomeNotifications().actionSink.close();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Spence'),
+        title: const Text(
+          'Spence',
+          style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
+        ),
         backgroundColor: Colors.orange,
         actions: <Widget>[
           Padding(
               padding: const EdgeInsets.only(right: 20.0),
               child: GestureDetector(
-                onTap: () async {
-                  await signOut();
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Are you sure you want to Logout?'),
+                          actions: <Widget>[
+                            TextButton(
+                                onPressed: () async {
+                                  await signOut();
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (context) => LoginPage()),
+                                      (Route<dynamic> route) => false);
+                                },
+                                child: const Text('Yes')),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('No'))
+                          ],
+                        );
+                      });
                 },
                 child: const Icon(
                   Icons.logout,
@@ -193,52 +242,54 @@ class MyCustomForm extends StatelessWidget {
           .snapshots();
     }
 
-    return StreamBuilder<DocumentSnapshot>(
-        stream: provideDocumentFieldStream(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (snapshot.hasError ||
-              snapshot.connectionState == ConnectionState.waiting) {
-            return Container(
-                alignment: Alignment.topCenter,
-                margin: const EdgeInsets.only(top: 20),
-                child: const CircularProgressIndicator(
-                  color: Colors.orange,
-                ));
-          }
-          var doc = snapshot.data as DocumentSnapshot;
-          return ListView(children: [
-            CardWidget(
-              value: _value[0],
-              image: _screenpic[0],
-              screen_name: _screenname[0],
-              num: doc.get("Bakery"),
-            ),
-            CardWidget(
-              value: _value[1],
-              image: _screenpic[1],
-              screen_name: _screenname[1],
-              num: doc.get('Dairy'),
-            ),
-            CardWidget(
-              value: _value[2],
-              image: _screenpic[2],
-              screen_name: _screenname[2],
-              num: doc.get('Medicine'),
-            ),
-            CardWidget(
-              value: _value[3],
-              image: _screenpic[3],
-              screen_name: _screenname[3],
-              num: doc.get('Frozen Food'),
-            ),
-            CardWidget(
-              value: _value[4],
-              image: _screenpic[4],
-              screen_name: _screenname[4],
-              num: doc.get('Others'),
-            ),
-          ]);
-        });
+    return FirebaseAuth.instance.currentUser != null
+        ? StreamBuilder<DocumentSnapshot>(
+            stream: provideDocumentFieldStream(),
+            builder: (BuildContext context,
+                AsyncSnapshot<DocumentSnapshot> snapshot) {
+              if (snapshot.hasError ||
+                  snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                    alignment: Alignment.topCenter,
+                    margin: const EdgeInsets.only(top: 20),
+                    child: const CircularProgressIndicator(
+                      color: Colors.orange,
+                    ));
+              }
+              var doc = snapshot.data as DocumentSnapshot;
+              return ListView(children: [
+                CardWidget(
+                  value: _value[0],
+                  image: _screenpic[0],
+                  screen_name: _screenname[0],
+                  num: doc.get("Bakery"),
+                ),
+                CardWidget(
+                  value: _value[1],
+                  image: _screenpic[1],
+                  screen_name: _screenname[1],
+                  num: doc.get('Dairy'),
+                ),
+                CardWidget(
+                  value: _value[2],
+                  image: _screenpic[2],
+                  screen_name: _screenname[2],
+                  num: doc.get('Medicine'),
+                ),
+                CardWidget(
+                  value: _value[3],
+                  image: _screenpic[3],
+                  screen_name: _screenname[3],
+                  num: doc.get('Frozen Food'),
+                ),
+                CardWidget(
+                  value: _value[4],
+                  image: _screenpic[4],
+                  screen_name: _screenname[4],
+                  num: doc.get('Others'),
+                ),
+              ]);
+            })
+        : LoginPage();
   }
 }

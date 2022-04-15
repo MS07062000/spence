@@ -4,7 +4,6 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:muraliapp/global_method.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -92,7 +91,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
   GlobalKey<FormState> _formGlobalKey = GlobalKey<FormState>();
   var date2 = "";
   var date3 = "";
-  String unit = "Android";
+  String unit = "None";
   String category = "Bakery";
   final _nameofproduct = new TextEditingController();
   final _dateController1 = new TextEditingController();
@@ -101,7 +100,6 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
   final _location = new TextEditingController();
   final _additionalinfo = new TextEditingController();
   final _quantitycontroller = new TextEditingController();
-  final GlobalMethods _globalMethods = GlobalMethods();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   late DateTime day1;
   DateTime? day2;
@@ -110,8 +108,10 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
   void clearformfield() {
     _formGlobalKey.currentState!.reset();
     _pickedImage = null;
-    unit = "Android";
+    unit = "None";
     category = "Bakery";
+    date2 = "";
+    date3 = "";
     _nameofproduct.clear();
     _dateController1.clear();
     _dateController2.clear();
@@ -119,6 +119,24 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
     _location.clear();
     _additionalinfo.clear();
     _quantitycontroller.clear();
+  }
+
+  showError() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: const Text('Please select an image'),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Ok')),
+            ],
+          );
+        });
   }
 
   void _trysubmit() async {
@@ -137,7 +155,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
 
       try {
         if (_pickedImage == null) {
-          _globalMethods.authErrorHandle('Please pick an image', context);
+          showError();
         } else {
           final User? user = _auth.currentUser;
           final _uid = user!.uid;
@@ -151,6 +169,10 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
           int uniqueid =
               DateTime.now().millisecondsSinceEpoch.remainder(100000);
           _formGlobalKey.currentState!.save();
+          if (_quantitycontroller.text == "") {
+            _quantitycontroller.text = '0';
+          }
+
           Map<String, dynamic> data = {
             "ModifiedName": _nameofproduct.text,
             "Name": _nameofproduct.text,
@@ -161,11 +183,14 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
             "Expiry Days": day2 != null
                 ? days_calculation(DateTime.now(), day2!)
                 : days_calculation(DateTime.now(), day3!),
-            "Quantity": _quantitycontroller.text + " " + unit,
+            "Quantity": _quantitycontroller.text == ""
+                ? ('1' + " " + unit)
+                : (_quantitycontroller.text + " " + unit),
             'Product Image': url,
             "Category": category,
-            "Location": _location.text,
-            "Additional Information": _additionalinfo.text,
+            "Location": _location.text == "" ? 'None' : _location.text,
+            "Additional Information":
+                _additionalinfo.text == "" ? 'None' : _additionalinfo.text,
             "Uniqueid": uniqueid,
           };
 
@@ -209,18 +234,18 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                         day: day2!.subtract(const Duration(days: 1)).day,
                         hour: 10,
                         minute: 0,
-                        second: 0)
+                      )
                     : NotificationCalendar(
                         year: day3!.subtract(const Duration(days: 1)).year,
                         month: day3!.subtract(const Duration(days: 1)).month,
                         day: day3!.subtract(const Duration(days: 1)).day,
                         hour: 10,
                         minute: 0,
-                        second: 0));
+                        timeZone: localTimeZone));
           }
 
           if (category == 'Bakery') {
-            _formGlobalKey.currentState!.reset();
+            //_formGlobalKey.currentState!.reset();
             widget.navigatorKey1.currentState!.pushNamed("Bakery");
           } else if (category == 'Dairy') {
             widget.navigatorKey1.currentState!.pushNamed("Dairy");
@@ -231,7 +256,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
           } else {
             widget.navigatorKey1.currentState!.pushNamed("Others");
           }
-          //clearformfield();
+          clearformfield();
           widget.controller1.index = 0;
         }
       } finally {}
@@ -295,10 +320,8 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                               _pickedImage!,
                               fit: BoxFit.cover,
                             )
-                          : Image.network(
-                              'https://upload.wikimedia.org/wikipedia/commons/5/5f/Alberto_conversi_profile_pic.jpg',
-                              fit: BoxFit.cover,
-                            ),
+                          : Icon(Icons.camera_alt_sharp,
+                              size: 70, color: Color.fromRGBO(49, 27, 146, 1)),
                     ),
                   ),
                 ),
@@ -455,7 +478,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                           if (selectedDate != null) {
                             day1 = selectedDate;
                             _dateController1.text =
-                                DateFormat('dd/MM/yyyy').format(selectedDate);
+                                DateFormat('dd/MM/yyyy').format(day1);
                           }
                         });
                       },
@@ -485,10 +508,10 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                           lastDate: DateTime(2025),
                         ).then((selectedDate) {
                           if (selectedDate != null) {
+                            day2 = selectedDate;
                             _dateController2.text =
                                 DateFormat('dd/MM/yyyy').format(selectedDate);
                             date2 = _dateController2.text;
-                            day2 = selectedDate;
                           }
                         });
                       },
@@ -559,7 +582,8 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                         });
                       },
                       validator: (date3) {
-                        if ((date3 == null || date3.isEmpty) && date2.isEmpty) {
+                        if ((date3 == null || date3.isEmpty) &&
+                            (date2.isEmpty)) {
                           return 'Please select best before month or expiry date.';
                         }
                         return null;
@@ -603,7 +627,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                                 'Node',
                                 'Java',
                                 'Python',
-                                'PHP',
+                                'None',
                               ].map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,

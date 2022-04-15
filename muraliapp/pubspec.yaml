@@ -50,6 +50,8 @@ dependencies:
   pie_chart: ^5.3.0
 
 
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -59,7 +61,7 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/1024.png"
+  image_path: "assets/logo square 1.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

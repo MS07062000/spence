@@ -21,7 +21,8 @@ class _SignUpState extends State<SignupPage> {
   checkAuthentication() async {
     _auth.authStateChanges().listen((user) async {
       if (user != null) {
-        Navigator.of(context).pushReplacementNamed('/home.dart');
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
       }
     });
   }
@@ -80,7 +81,8 @@ class _SignUpState extends State<SignupPage> {
         final UserCredential user =
             await _auth.signInWithCredential(credential);
 
-        await Navigator.of(context).pushReplacementNamed('/home.dart');
+        await Navigator.of(context)
+            .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
 
         return user;
       } else {
@@ -100,11 +102,13 @@ class _SignUpState extends State<SignupPage> {
             'Signup',
             style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.orange,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
+              icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+              onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  )),
         ),
         body: SingleChildScrollView(
           child: Padding(
@@ -176,31 +180,28 @@ class _SignUpState extends State<SignupPage> {
                             onSaved: (input) => _password = input.toString()),
                         const SizedBox(height: 20),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(70, 10, 70, 10),
-                          child: ElevatedButton(
-                            onPressed: signUp,
-                            child: const Text('Sign Up',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold)),
-                            style: ButtonStyle(
-                              padding: MaterialStateProperty.all(
-                                  const EdgeInsets.all(20)),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
+                          padding: const EdgeInsets.all(8.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: ElevatedButton(
+                              onPressed: signUp,
+                              child: const Text('Sign Up',
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(49, 27, 146, 1),
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.bold)),
+                              style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.resolveWith<Color>(
+                                  (Set<MaterialState> states) {
+                                    if (states
+                                        .contains(MaterialState.pressed)) {
+                                      return Colors.green;
+                                    }
+                                    return Colors.orange;
+                                  },
                                 ),
-                              ),
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith<Color>(
-                                (Set<MaterialState> states) {
-                                  if (states.contains(MaterialState.pressed)) {
-                                    return Colors.green;
-                                  }
-                                  return Colors.orange;
-                                },
                               ),
                             ),
                           ),
