@@ -62,26 +62,29 @@ class _Expiringsoon extends State<ExpiringsoonpageWidget> {
                 ));
           }
 
-          return ListView(
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data =
-                  document.data()! as Map<String, dynamic>;
-              return Card2Widget(
-                docid: document.id,
-                name: data['Name'],
-                expirydate: data['Expiry Date'],
-                image: data['Product Image'],
-                quantity: data['Quantity'],
-                manufacturingdate: data['Manufacturing Date'],
-                expirydays: data['Expiry Days'],
-                location: data['Location'],
-                additionalinformation: data['Additional Information'],
-                category: data['Category'],
-                uniqueid: data['Uniqueid'],
-                modifiedname: data['ModifiedName'],
-              );
-            }).toList(),
-          );
+          if (snapshot.hasData) {
+            return ListView(
+              children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                Map<String, dynamic> data =
+                    document.data()! as Map<String, dynamic>;
+                return Card2Widget(
+                  docid: document.id,
+                  name: data['Name'],
+                  expirydate: data['Expiry Date'],
+                  image: data['Product Image'],
+                  quantity: data['Quantity'],
+                  manufacturingdate: data['Manufacturing Date'],
+                  expirydays: data['Expiry Days'],
+                  location: data['Location'],
+                  additionalinformation: data['Additional Information'],
+                  category: data['Category'],
+                  uniqueid: data['Uniqueid'],
+                  modifiedname: data['ModifiedName'],
+                );
+              }).toList(),
+            );
+          }
+          return Container();
         },
       ),
     );

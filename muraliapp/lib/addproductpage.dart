@@ -91,7 +91,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
   GlobalKey<FormState> _formGlobalKey = GlobalKey<FormState>();
   var date2 = "";
   var date3 = "";
-  String unit = "None";
+  String unit = 'none';
   String category = "Bakery";
   final _nameofproduct = new TextEditingController();
   final _dateController1 = new TextEditingController();
@@ -108,7 +108,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
   void clearformfield() {
     _formGlobalKey.currentState!.reset();
     _pickedImage = null;
-    unit = "None";
+    unit = "none";
     category = "Bakery";
     date2 = "";
     date3 = "";
@@ -617,17 +617,31 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                           width: MediaQuery.of(context).size.width * 0.42,
                           child: DropdownButtonHideUnderline(
                             child: DropdownButtonFormField<String>(
+                              menuMaxHeight:
+                                  MediaQuery.of(context).size.height * 0.25,
                               decoration: _inputdec("Unit"),
                               value: unit,
                               style: const TextStyle(color: Colors.black),
                               items: <String>[
-                                'Android',
-                                'IOS',
-                                'Flutter',
-                                'Node',
-                                'Java',
-                                'Python',
-                                'None',
+                                'kg',
+                                'g',
+                                'lt',
+                                'ml',
+                                'lb',
+                                'oz',
+                                'quart',
+                                'gallon',
+                                'piece',
+                                'pack',
+                                'bottle',
+                                'jar',
+                                'can',
+                                'box',
+                                'bag',
+                                'table',
+                                'tube',
+                                'roll',
+                                'none',
                               ].map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,

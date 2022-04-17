@@ -9,6 +9,7 @@ import 'package:muraliapp/categories_widget/medicine_screen.dart';
 import 'package:muraliapp/categories_widget/others.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:muraliapp/countdowntimer.dart';
 import 'package:muraliapp/login_signup_widgets/login.dart';
 
 class HomepageWidget extends StatefulWidget {
@@ -86,51 +87,72 @@ class _Homepage extends State<HomepageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Spence',
-          style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
-        ),
-        backgroundColor: Colors.orange,
-        actions: <Widget>[
-          Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: GestureDetector(
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('Are you sure you want to Logout?'),
-                          actions: <Widget>[
-                            TextButton(
-                                onPressed: () async {
-                                  await signOut();
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                          builder: (context) => LoginPage()),
-                                      (Route<dynamic> route) => false);
-                                },
-                                child: const Text('Yes')),
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('No'))
-                          ],
-                        );
-                      });
-                },
-                child: const Icon(
-                  Icons.logout,
-                  size: 26.0,
+    return FirebaseAuth.instance.currentUser != null
+        ? StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('users')
+                .doc(FirebaseAuth.instance.currentUser!.uid)
+                .collection("user_orders")
+                .snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              snapshot.data!.docs.map((DocumentSnapshot document) {
+                Map<String, dynamic> data =
+                    document.data()! as Map<String, dynamic>;
+                countdowntimer(FirebaseAuth.instance.currentUser, document.id,
+                    data['Expiry Date'], data['Name'], data['Category']);
+              });
+              return Scaffold(
+                appBar: AppBar(
+                  title: const Text(
+                    'Spence',
+                    style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
+                  ),
+                  backgroundColor: Colors.orange,
+                  actions: <Widget>[
+                    Padding(
+                        padding: const EdgeInsets.only(right: 20.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text(
+                                        'Are you sure you want to Logout?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                          onPressed: () async {
+                                            await signOut();
+                                            Navigator.of(context)
+                                                .pushAndRemoveUntil(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            LoginPage()),
+                                                    (Route<dynamic> route) =>
+                                                        false);
+                                          },
+                                          child: const Text('Yes')),
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('No'))
+                                    ],
+                                  );
+                                });
+                          },
+                          child: const Icon(
+                            Icons.logout,
+                            size: 26.0,
+                          ),
+                        )),
+                  ],
                 ),
-              )),
-        ],
-      ),
-      body: const MyCustomForm(),
-    );
+                body: const MyCustomForm(),
+              );
+            })
+        : LoginPage();
   }
 }
 
@@ -242,54 +264,52 @@ class MyCustomForm extends StatelessWidget {
           .snapshots();
     }
 
-    return FirebaseAuth.instance.currentUser != null
-        ? StreamBuilder<DocumentSnapshot>(
-            stream: provideDocumentFieldStream(),
-            builder: (BuildContext context,
-                AsyncSnapshot<DocumentSnapshot> snapshot) {
-              if (snapshot.hasError ||
-                  snapshot.connectionState == ConnectionState.waiting) {
-                return Container(
-                    alignment: Alignment.topCenter,
-                    margin: const EdgeInsets.only(top: 20),
-                    child: const CircularProgressIndicator(
-                      color: Colors.orange,
-                    ));
-              }
-              var doc = snapshot.data as DocumentSnapshot;
-              return ListView(children: [
-                CardWidget(
-                  value: _value[0],
-                  image: _screenpic[0],
-                  screen_name: _screenname[0],
-                  num: doc.get("Bakery"),
-                ),
-                CardWidget(
-                  value: _value[1],
-                  image: _screenpic[1],
-                  screen_name: _screenname[1],
-                  num: doc.get('Dairy'),
-                ),
-                CardWidget(
-                  value: _value[2],
-                  image: _screenpic[2],
-                  screen_name: _screenname[2],
-                  num: doc.get('Medicine'),
-                ),
-                CardWidget(
-                  value: _value[3],
-                  image: _screenpic[3],
-                  screen_name: _screenname[3],
-                  num: doc.get('Frozen Food'),
-                ),
-                CardWidget(
-                  value: _value[4],
-                  image: _screenpic[4],
-                  screen_name: _screenname[4],
-                  num: doc.get('Others'),
-                ),
-              ]);
-            })
-        : LoginPage();
+    return StreamBuilder<DocumentSnapshot>(
+        stream: provideDocumentFieldStream(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError ||
+              snapshot.connectionState == ConnectionState.waiting) {
+            return Container(
+                alignment: Alignment.topCenter,
+                margin: const EdgeInsets.only(top: 20),
+                child: const CircularProgressIndicator(
+                  color: Colors.orange,
+                ));
+          }
+          var doc = snapshot.data as DocumentSnapshot;
+          return ListView(children: [
+            CardWidget(
+              value: _value[0],
+              image: _screenpic[0],
+              screen_name: _screenname[0],
+              num: doc.get("Bakery"),
+            ),
+            CardWidget(
+              value: _value[1],
+              image: _screenpic[1],
+              screen_name: _screenname[1],
+              num: doc.get('Dairy'),
+            ),
+            CardWidget(
+              value: _value[2],
+              image: _screenpic[2],
+              screen_name: _screenname[2],
+              num: doc.get('Medicine'),
+            ),
+            CardWidget(
+              value: _value[3],
+              image: _screenpic[3],
+              screen_name: _screenname[3],
+              num: doc.get('Frozen Food'),
+            ),
+            CardWidget(
+              value: _value[4],
+              image: _screenpic[4],
+              screen_name: _screenname[4],
+              num: doc.get('Others'),
+            ),
+          ]);
+        });
   }
 }
