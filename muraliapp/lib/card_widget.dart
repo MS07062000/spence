@@ -22,6 +22,7 @@ class _MyStatefulWidgetState extends State<CardWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      borderOnForeground: false,
       child: Container(
         height: 100,
         decoration: BoxDecoration(
@@ -67,12 +68,12 @@ class _MyStatefulWidgetState extends State<CardWidget> {
           ],
         ),
       ),
-      elevation: 8,
+      elevation: 0,
       margin: const EdgeInsets.all(10),
-      shadowColor: Colors.orange,
       shape: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Colors.orange, width: 1)),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      // borderSide: const BorderSide(color: Colors.orange, width: 1)),
     );
   }
 }

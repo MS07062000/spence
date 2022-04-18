@@ -58,11 +58,13 @@ class _MyCardWidgetState extends State<Card2Widget> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      borderOnForeground: false,
       child: ClipPath(
         clipper: ShapeBorderClipper(
             shape: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: Colors.orange, width: 1))),
+          borderRadius: BorderRadius.circular(10),
+        )),
+        //borderSide: BorderSide(color: Colors.orange, width: 1))),
         child: Container(
           height: 106,
           color: Colors.white,
@@ -209,12 +211,12 @@ class _MyCardWidgetState extends State<Card2Widget> {
           ),
         ),
       ),
-      elevation: 8,
+      elevation: 0,
       margin: const EdgeInsets.all(10),
-      shadowColor: Colors.orange,
       shape: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Colors.orange, width: 1)),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      //borderSide: const BorderSide(color: Colors.orange, width: 1)),
     );
   }
 
@@ -256,12 +258,14 @@ class _MyCardWidgetState extends State<Card2Widget> {
                     deleteUser();
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Yes')),
+                  child: const Text('Yes',
+                      style: TextStyle(color: Colors.orange))),
               TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text('No'))
+                  child:
+                      const Text('No', style: TextStyle(color: Colors.black)))
             ],
           );
         });

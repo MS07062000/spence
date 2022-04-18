@@ -22,11 +22,12 @@ class _MyCardWidgetState extends State<Card3Widget> {
   @override
   Widget build(BuildContext context) {
     return Card(
+        borderOnForeground: false,
         child: ClipPath(
             clipper: ShapeBorderClipper(
                 shape: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.orange, width: 1))),
+              borderRadius: BorderRadius.circular(10),
+            )),
             child: GestureDetector(
                 onTap: () {
                   setState(() {
@@ -59,7 +60,7 @@ class _MyCardWidgetState extends State<Card3Widget> {
                                 text: widget.name,
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.red)),
+                                    color: Colors.orange)),
                             TextSpan(
                               text: ' is going to be expired on ',
                               style: TextStyle(color: Colors.black),
@@ -68,7 +69,7 @@ class _MyCardWidgetState extends State<Card3Widget> {
                                 text: widget.expirydate,
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.red)),
+                                    color: Colors.orange)),
                             TextSpan(
                               text: '. Please use it today or remove it.',
                               style: TextStyle(color: Colors.black),
@@ -84,12 +85,13 @@ class _MyCardWidgetState extends State<Card3Widget> {
                         icon: const Icon(Icons.delete),
                       ),
                     )))),
-        elevation: 8,
+        elevation: 0,
         margin: const EdgeInsets.all(10),
-        shadowColor: Colors.orange,
+        //shadowColor: Colors.orange,
         shape: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.orange, width: 1)));
+          borderRadius: BorderRadius.circular(10),
+        ));
+    //borderSide: BorderSide(color: Colors.orange, width: 1)));
   }
 
   Future<void> deleteUser() async {
@@ -116,12 +118,14 @@ class _MyCardWidgetState extends State<Card3Widget> {
                     deleteUser();
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Yes')),
+                  child: const Text('Yes',
+                      style: TextStyle(color: Colors.orange))),
               TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text('No'))
+                  child:
+                      const Text('No', style: TextStyle(color: Colors.black)))
             ],
           );
         });

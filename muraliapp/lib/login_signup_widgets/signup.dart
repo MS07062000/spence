@@ -100,11 +100,11 @@ class _SignUpState extends State<SignupPage> {
         appBar: AppBar(
           title: const Text(
             'Signup',
-            style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
+            style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Colors.orange,
           leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+              icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
               onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const LoginPage()),
@@ -135,20 +135,23 @@ class _SignUpState extends State<SignupPage> {
                                     : null,
                             decoration: InputDecoration(
                               labelText: 'Email',
-                              suffixIcon: const Icon(Icons.email),
+                              floatingLabelStyle:
+                                  const TextStyle(color: Colors.orange),
+                              suffixIcon:
+                                  const Icon(Icons.email, color: Colors.orange),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 3, color: Colors.purple.shade800),
+                                borderSide:
+                                    BorderSide(width: 1, color: Colors.orange),
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(
-                                    width: 3, color: Colors.orange),
+                                    width: 1, color: Colors.orange),
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               errorBorder: const OutlineInputBorder(
                                   borderSide:
-                                      BorderSide(color: Colors.red, width: 3)),
+                                      BorderSide(color: Colors.red, width: 1)),
                             ),
                             onSaved: (input) => _email = input.toString()),
                         const SizedBox(height: 20),
@@ -161,20 +164,25 @@ class _SignUpState extends State<SignupPage> {
                             },
                             decoration: InputDecoration(
                               labelText: 'Password',
-                              suffixIcon: const Icon(Icons.lock),
+                              floatingLabelStyle:
+                                  const TextStyle(color: Colors.orange),
+                              suffixIcon: const Icon(
+                                Icons.lock,
+                                color: Colors.orange,
+                              ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 3, color: Colors.purple.shade800),
+                                borderSide:
+                                    BorderSide(width: 1, color: Colors.orange),
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(
-                                    width: 3, color: Colors.orange),
+                                    width: 1, color: Colors.orange),
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               errorBorder: const OutlineInputBorder(
                                   borderSide:
-                                      BorderSide(color: Colors.red, width: 3)),
+                                      BorderSide(color: Colors.red, width: 1)),
                             ),
                             obscureText: true,
                             onSaved: (input) => _password = input.toString()),
@@ -188,7 +196,7 @@ class _SignUpState extends State<SignupPage> {
                               onPressed: signUp,
                               child: const Text('Sign Up',
                                   style: TextStyle(
-                                      color: Color.fromRGBO(49, 27, 146, 1),
+                                      color: Colors.white,
                                       fontSize: 20.0,
                                       fontWeight: FontWeight.bold)),
                               style: ButtonStyle(
@@ -208,9 +216,25 @@ class _SignUpState extends State<SignupPage> {
                         ),
                         const Text("OR", textAlign: TextAlign.center),
                         const SizedBox(height: 20.0),
-                        SignInButton(Buttons.Google,
-                            text: "Sign up with Google",
-                            onPressed: googleSignIn),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: SignInButton(
+                              Buttons.Google,
+                              padding: EdgeInsets.only(
+                                  left:
+                                      MediaQuery.of(context).size.width * 0.12),
+                              text: "Sign Up with Google",
+                              shape: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: const BorderSide(
+                                      color: Colors.orange, width: 1)),
+                              onPressed: googleSignIn,
+                              elevation: 0,
+                            ),
+                          ),
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[

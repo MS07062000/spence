@@ -106,7 +106,7 @@ class _Homepage extends State<HomepageWidget> {
                 appBar: AppBar(
                   title: const Text(
                     'Spence',
-                    style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
+                    style: TextStyle(color: Colors.white),
                   ),
                   backgroundColor: Colors.orange,
                   actions: <Widget>[
@@ -132,12 +132,16 @@ class _Homepage extends State<HomepageWidget> {
                                                     (Route<dynamic> route) =>
                                                         false);
                                           },
-                                          child: const Text('Yes')),
+                                          child: const Text('Yes',
+                                              style: TextStyle(
+                                                  color: Colors.black))),
                                       TextButton(
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
-                                          child: const Text('No'))
+                                          child: const Text('No',
+                                              style: TextStyle(
+                                                  color: Colors.orange)))
                                     ],
                                   );
                                 });
@@ -152,7 +156,7 @@ class _Homepage extends State<HomepageWidget> {
                 body: const MyCustomForm(),
               );
             })
-        : LoginPage();
+        : Container();
   }
 }
 

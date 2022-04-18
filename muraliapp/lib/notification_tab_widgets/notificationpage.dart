@@ -54,7 +54,8 @@ class _notificationpage extends State<notificationpageWidget> {
                           builder: (context) => const Homepage2Widget()),
                     );
                   },
-                  child: const Text('OK'))
+                  child:
+                      const Text('OK', style: TextStyle(color: Colors.orange)))
             ],
           );
         });
@@ -72,12 +73,14 @@ class _notificationpage extends State<notificationpageWidget> {
                     deleteUser();
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Yes')),
+                  child: const Text('Yes',
+                      style: TextStyle(color: Colors.orange))),
               TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text('No'))
+                  child:
+                      const Text('No', style: TextStyle(color: Colors.black)))
             ],
           );
         });
@@ -106,7 +109,7 @@ class _notificationpage extends State<notificationpageWidget> {
         appBar: AppBar(
           title: const Text(
             'Notification',
-            style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
+            style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Colors.orange,
           actions: [
@@ -125,7 +128,7 @@ class _notificationpage extends State<notificationpageWidget> {
                                 tooltip: 'Delete All',
                                 icon: const Icon(
                                   Icons.delete_forever_sharp,
-                                  color: Color.fromRGBO(49, 27, 146, 1),
+                                  color: Colors.white,
                                 ),
                                 onPressed: () {
                                   showError2();
@@ -135,7 +138,7 @@ class _notificationpage extends State<notificationpageWidget> {
                                 padding: EdgeInsets.all(8.0),
                                 child: Icon(
                                   Icons.delete_forever_sharp,
-                                  color: Color.fromRGBO(49, 27, 146, 1),
+                                  color: Colors.white,
                                 )));
                   }
                   return Container(
@@ -143,7 +146,7 @@ class _notificationpage extends State<notificationpageWidget> {
                           padding: EdgeInsets.all(8.0),
                           child: Icon(
                             Icons.delete_forever_sharp,
-                            color: Color.fromRGBO(49, 27, 146, 1),
+                            color: Colors.white,
                           )));
                 }),
           ],

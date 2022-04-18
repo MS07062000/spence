@@ -46,7 +46,7 @@ class _Updateproduct extends State<UpdateproductpageWidget> {
       appBar: AppBar(
           title: const Text(
             'Update Product',
-            style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
+            style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Colors.orange,
           leading: IconButton(
@@ -74,35 +74,37 @@ class _Updateproduct extends State<UpdateproductpageWidget> {
 
 _inputdec(String text) {
   return InputDecoration(
+    floatingLabelStyle: const TextStyle(color: Colors.orange),
     counterText: "",
     enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(width: 2, color: Colors.purple.shade800),
+      borderSide: BorderSide(width: 1, color: Colors.orange),
       borderRadius: BorderRadius.circular(15),
     ),
     focusedBorder: OutlineInputBorder(
-      borderSide: const BorderSide(width: 2, color: Colors.orange),
+      borderSide: const BorderSide(width: 1, color: Colors.orange),
       borderRadius: BorderRadius.circular(15),
     ),
     errorBorder: const OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.red, width: 2)),
+        borderSide: BorderSide(color: Colors.red, width: 1)),
     labelText: text,
   );
 }
 
 _inputdec2(String text, IconData text2) {
   return InputDecoration(
+    floatingLabelStyle: const TextStyle(color: Colors.orange),
     enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(width: 2, color: Colors.purple.shade800),
+      borderSide: BorderSide(width: 1, color: Colors.orange),
       borderRadius: BorderRadius.circular(15),
     ),
     focusedBorder: OutlineInputBorder(
-      borderSide: const BorderSide(width: 2, color: Colors.orange),
+      borderSide: const BorderSide(width: 1, color: Colors.orange),
       borderRadius: BorderRadius.circular(15),
     ),
     errorBorder: const OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.red, width: 2)),
+        borderSide: BorderSide(color: Colors.red, width: 1)),
     labelText: text,
-    suffixIcon: Icon(text2),
+    suffixIcon: Icon(text2, color: Colors.orange),
   );
 }
 
@@ -517,14 +519,22 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                       onPressed: _trysubmit,
                       child: const Text(
                         'Update Product',
-                        style: TextStyle(
-                            color: Color.fromRGBO(49, 27, 146, 1),
-                            fontSize: 20),
+                        style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.orange,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.pressed)) {
+                              return Colors.green;
+                            }
+                            return Colors.orange;
+                          },
+                        ),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0)),
                         ),
                       ),
                     ),

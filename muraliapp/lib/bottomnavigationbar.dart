@@ -67,8 +67,8 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
               child: CupertinoTabScaffold(
                 controller: controller,
                 tabBar: CupertinoTabBar(
-                  inactiveColor: Colors.white,
-                  backgroundColor: Color(0xff333366),
+                  inactiveColor: Colors.grey.shade600,
+                  backgroundColor: Colors.white,
                   onTap: (index) {
                     if (currentIndex == index && currentIndex != 2) {
                       // Navigate to the tab's root route
@@ -90,7 +90,7 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
                     ),
                     BottomNavigationBarItem(
                       icon: Icon(Icons.add_circle_outlined,
-                          color: Color.fromARGB(255, 4, 245, 12)),
+                          color: Colors.green.shade600),
                       label: "Add Product",
                       backgroundColor: Colors.orange,
                     ),
@@ -293,7 +293,7 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.add_circle_outline_rounded,
-                        color: Colors.purple),
+                        color: Colors.green.shade900),
                     label: "Add Product",
                     backgroundColor: Colors.orange,
                   ),
@@ -440,5 +440,3 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
     );
   }
 }
-
-class BottomNavigationBarWidgets {}

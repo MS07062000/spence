@@ -42,7 +42,7 @@ class _Expiringsoon extends State<ExpiringsoonpageWidget> {
       appBar: AppBar(
         title: const Text(
           'Expiring Soon',
-          style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
+          style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.orange,
       ),

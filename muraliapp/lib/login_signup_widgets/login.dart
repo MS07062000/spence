@@ -98,7 +98,7 @@ class _LoginState extends State<LoginPage> {
           automaticallyImplyLeading: false,
           title: const Text(
             'Login',
-            style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
+            style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Colors.orange,
         ),
@@ -136,21 +136,23 @@ class _LoginState extends State<LoginPage> {
                                     : null,
                                 decoration: InputDecoration(
                                   labelText: 'Email',
-                                  suffixIcon: const Icon(Icons.email),
+                                  floatingLabelStyle:
+                                      const TextStyle(color: Colors.orange),
+                                  suffixIcon: const Icon(Icons.email,
+                                      color: Colors.orange),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                        width: 3,
-                                        color: Colors.purple.shade800),
+                                        width: 1, color: Colors.orange),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: const BorderSide(
-                                        width: 3, color: Colors.orange),
+                                        width: 1, color: Colors.orange),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   errorBorder: const OutlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: Colors.red, width: 3)),
+                                          color: Colors.red, width: 1)),
                                 ),
                                 onSaved: (input) => _email = input!),
                             const SizedBox(height: 20),
@@ -163,21 +165,23 @@ class _LoginState extends State<LoginPage> {
                                 },
                                 decoration: InputDecoration(
                                   labelText: 'Password',
-                                  suffixIcon: const Icon(Icons.lock),
+                                  floatingLabelStyle:
+                                      const TextStyle(color: Colors.orange),
+                                  suffixIcon: const Icon(Icons.lock,
+                                      color: Colors.orange),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                        width: 3,
-                                        color: Colors.purple.shade800),
+                                        width: 1, color: Colors.orange),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: const BorderSide(
-                                        width: 3, color: Colors.orange),
+                                        width: 1, color: Colors.orange),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   errorBorder: const OutlineInputBorder(
                                       borderSide: BorderSide(
-                                          color: Colors.red, width: 3)),
+                                          color: Colors.red, width: 1)),
                                 ),
                                 obscureText: true,
                                 onSaved: (input) => _password = input!),
@@ -191,8 +195,7 @@ class _LoginState extends State<LoginPage> {
                                     onPressed: login,
                                     child: const Text('Login',
                                         style: TextStyle(
-                                            color:
-                                                Color.fromRGBO(49, 27, 146, 1),
+                                            color: Colors.white,
                                             fontSize: 20.0,
                                             fontWeight: FontWeight.bold)),
                                     style: ButtonStyle(
@@ -232,9 +235,25 @@ class _LoginState extends State<LoginPage> {
                               ],
                             ),
                             const SizedBox(height: 20.0),
-                            SignInButton(Buttons.Google,
-                                text: "Log In with Google",
-                                onPressed: googleSignIn),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: SignInButton(
+                                  Buttons.Google,
+                                  padding: EdgeInsets.only(
+                                      left: MediaQuery.of(context).size.width *
+                                          0.12),
+                                  text: "Log In with Google",
+                                  shape: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide: const BorderSide(
+                                          color: Colors.orange, width: 1)),
+                                  onPressed: googleSignIn,
+                                  elevation: 0,
+                                ),
+                              ),
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[

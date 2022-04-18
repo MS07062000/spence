@@ -16,7 +16,7 @@ class _garbagereport extends State<garbagereportWidget> {
       appBar: AppBar(
         title: const Text(
           'Wastage Report',
-          style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
+          style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.orange,
       ),
@@ -107,14 +107,22 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                           }, //deleteUser(),
                           child: const Text(
                             'Reset',
-                            style: TextStyle(
-                                color: Color.fromRGBO(49, 27, 146, 1),
-                                fontSize: 20),
+                            style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.orange,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.resolveWith<Color>(
+                              (Set<MaterialState> states) {
+                                if (states.contains(MaterialState.pressed)) {
+                                  return Colors.green;
+                                }
+                                return Colors.orange;
+                              },
+                            ),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0)),
                             ),
                           ),
                         )
@@ -138,12 +146,16 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                     deleteUser();
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Yes')),
+                  child: const Text(
+                    'Yes',
+                    style: TextStyle(color: Colors.orange),
+                  )),
               TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text('No'))
+                  child:
+                      const Text('No', style: TextStyle(color: Colors.black)))
             ],
           );
         });
