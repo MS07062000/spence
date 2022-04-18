@@ -126,70 +126,70 @@ class _SignUpState extends State<SignupPage> {
                   ),
                   Form(
                     key: _formKey,
-                    child: Column(
-                      children: <Widget>[
-                        TextFormField(
-                            validator: (input) =>
-                                input != null && !EmailValidator.validate(input)
-                                    ? 'Enter a valid email'
-                                    : null,
-                            decoration: InputDecoration(
-                              labelText: 'Email',
-                              floatingLabelStyle:
-                                  const TextStyle(color: Colors.orange),
-                              suffixIcon:
-                                  const Icon(Icons.email, color: Colors.orange),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(width: 1, color: Colors.orange),
-                                borderRadius: BorderRadius.circular(15),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        children: <Widget>[
+                          TextFormField(
+                              validator: (input) => input != null &&
+                                      !EmailValidator.validate(input)
+                                  ? 'Enter a valid email'
+                                  : null,
+                              decoration: InputDecoration(
+                                labelText: 'Email',
+                                floatingLabelStyle:
+                                    const TextStyle(color: Colors.orange),
+                                suffixIcon: const Icon(Icons.email,
+                                    color: Colors.orange),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      width: 1, color: Colors.orange),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      width: 1, color: Colors.orange),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                errorBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.red, width: 1)),
                               ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    width: 1, color: Colors.orange),
-                                borderRadius: BorderRadius.circular(15),
+                              onSaved: (input) => _email = input.toString()),
+                          const SizedBox(height: 20),
+                          TextFormField(
+                              validator: (input) {
+                                if (input!.length < 6) {
+                                  return 'Provide Minimum 6 Character';
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                labelText: 'Password',
+                                floatingLabelStyle:
+                                    const TextStyle(color: Colors.orange),
+                                suffixIcon: const Icon(
+                                  Icons.lock,
+                                  color: Colors.orange,
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      width: 1, color: Colors.orange),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      width: 1, color: Colors.orange),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                errorBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.red, width: 1)),
                               ),
-                              errorBorder: const OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.red, width: 1)),
-                            ),
-                            onSaved: (input) => _email = input.toString()),
-                        const SizedBox(height: 20),
-                        TextFormField(
-                            validator: (input) {
-                              if (input!.length < 6) {
-                                return 'Provide Minimum 6 Character';
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                              labelText: 'Password',
-                              floatingLabelStyle:
-                                  const TextStyle(color: Colors.orange),
-                              suffixIcon: const Icon(
-                                Icons.lock,
-                                color: Colors.orange,
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(width: 1, color: Colors.orange),
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    width: 1, color: Colors.orange),
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              errorBorder: const OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.red, width: 1)),
-                            ),
-                            obscureText: true,
-                            onSaved: (input) => _password = input.toString()),
-                        const SizedBox(height: 20),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
+                              obscureText: true,
+                              onSaved: (input) => _password = input.toString()),
+                          const SizedBox(height: 20),
+                          SizedBox(
                             width: double.infinity,
                             height: 50,
                             child: ElevatedButton(
@@ -213,12 +213,12 @@ class _SignUpState extends State<SignupPage> {
                               ),
                             ),
                           ),
-                        ),
-                        const Text("OR", textAlign: TextAlign.center),
-                        const SizedBox(height: 20.0),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child:
+                                const Text("OR", textAlign: TextAlign.center),
+                          ),
+                          SizedBox(
                             width: double.infinity,
                             child: SignInButton(
                               Buttons.Google,
@@ -234,31 +234,31 @@ class _SignUpState extends State<SignupPage> {
                               elevation: 0,
                             ),
                           ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            const Text("Already have an account?"),
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                textStyle: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              const Text("Already have an account?"),
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                  textStyle: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15,
+                                  ),
+                                  primary: Colors.orange,
                                 ),
-                                primary: Colors.orange,
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const LoginPage()));
+                                },
+                                child: const Text('Login'),
                               ),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const LoginPage()));
-                              },
-                              child: const Text('Login'),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

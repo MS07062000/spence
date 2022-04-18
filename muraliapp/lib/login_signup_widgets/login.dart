@@ -186,32 +186,29 @@ class _LoginState extends State<LoginPage> {
                                 obscureText: true,
                                 onSaved: (input) => _password = input!),
                             const SizedBox(height: 20),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SizedBox(
-                                  width: double.infinity,
-                                  height: 50,
-                                  child: ElevatedButton(
-                                    onPressed: login,
-                                    child: const Text('Login',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20.0,
-                                            fontWeight: FontWeight.bold)),
-                                    style: ButtonStyle(
-                                      backgroundColor: MaterialStateProperty
-                                          .resolveWith<Color>(
-                                        (Set<MaterialState> states) {
-                                          if (states.contains(
-                                              MaterialState.pressed)) {
-                                            return Colors.green;
-                                          }
-                                          return Colors.orange;
-                                        },
-                                      ),
+                            SizedBox(
+                                width: double.infinity,
+                                height: 50,
+                                child: ElevatedButton(
+                                  onPressed: login,
+                                  child: const Text('Login',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold)),
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty
+                                        .resolveWith<Color>(
+                                      (Set<MaterialState> states) {
+                                        if (states
+                                            .contains(MaterialState.pressed)) {
+                                          return Colors.green;
+                                        }
+                                        return Colors.orange;
+                                      },
                                     ),
-                                  )),
-                            ),
+                                  ),
+                                )),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
@@ -234,24 +231,20 @@ class _LoginState extends State<LoginPage> {
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 20.0),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: SignInButton(
-                                  Buttons.Google,
-                                  padding: EdgeInsets.only(
-                                      left: MediaQuery.of(context).size.width *
-                                          0.12),
-                                  text: "Log In with Google",
-                                  shape: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: const BorderSide(
-                                          color: Colors.orange, width: 1)),
-                                  onPressed: googleSignIn,
-                                  elevation: 0,
-                                ),
+                            SizedBox(
+                              width: double.infinity,
+                              child: SignInButton(
+                                Buttons.Google,
+                                padding: EdgeInsets.only(
+                                    left: MediaQuery.of(context).size.width *
+                                        0.12),
+                                text: "Log In with Google",
+                                shape: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    borderSide: const BorderSide(
+                                        color: Colors.orange, width: 1)),
+                                onPressed: googleSignIn,
+                                elevation: 0,
                               ),
                             ),
                             Row(
