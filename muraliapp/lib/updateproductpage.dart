@@ -230,6 +230,21 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
           "Uniqueid": widget.uniqueid_1,
         });
 
+        if (widget.category_1 != category) {
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(_uid)
+              .collection("user_orders")
+              .doc("count")
+              .update({widget.category_1: FieldValue.increment(-1)});
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(_uid)
+              .collection("user_orders")
+              .doc("count")
+              .update({category: FieldValue.increment(1)});
+        }
+
         if ((day2 != null
                 ? days_calculation(DateTime.now(), day2!)
                 : days_calculation(DateTime.now(), day3!)) <
