@@ -241,7 +241,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                   nameofproduct.text +
                   ' is going to be expired tomorrow. Please use it today or remove it.',
               scheduledDate: DateTime.now().add(Duration(minutes: 2)));
-          print(DateTime.now().add(Duration(minutes: 2)));
+          // print(DateTime.now().add(Duration(minutes: 2)));
         } else {
           NotificationApi.showScheduledNotification(
               id: widget.uniqueid_1,
@@ -266,7 +266,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                       0,
                       0,
                       0));
-          print(day2 != null
+          /*print(day2 != null
               ? DateTime(
                   day2!.subtract(const Duration(days: 1)).year,
                   day2!.subtract(const Duration(days: 1)).month,
@@ -282,7 +282,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                   10,
                   0,
                   0,
-                  0));
+                  0));*/
         }
 
         Navigator.canPop(context) ? Navigator.pop(context) : null;
