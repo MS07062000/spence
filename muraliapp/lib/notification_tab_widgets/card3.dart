@@ -86,7 +86,7 @@ class _MyCardWidgetState extends State<Card3Widget> {
                       ),
                     )))),
         elevation: 0,
-        margin: const EdgeInsets.all(10),
+        margin: const EdgeInsets.only(left: 5.0, right: 5.0, top: 5.0),
         //shadowColor: Colors.orange,
         shape: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -155,7 +155,7 @@ class _MyCardWidgetState extends State<Card3Widget> {
 
 Color getColor(int colour) {
   if (colour == 1) {
-    return Colors.grey.shade200;
+    return Colors.grey.shade300;
   }
   return Colors.white;
 }

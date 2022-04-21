@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:muraliapp/categories_widget/card2.dart';
 import 'package:muraliapp/countdowntimer.dart';
+import 'package:muraliapp/home.dart';
 
 class OthersWidget extends StatefulWidget {
   const OthersWidget({Key? key}) : super(key: key);
@@ -30,9 +31,11 @@ class _Otherspage extends State<OthersWidget> {
             actions: <Widget>[
               TextButton(
                   onPressed: () {
-                    Future.delayed(Duration.zero, () {
-                      Navigator.of(context).pop();
-                    });
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomepageWidget()),
+                    );
                   },
                   child: const Text('OK'))
             ],
@@ -46,7 +49,6 @@ class _Otherspage extends State<OthersWidget> {
       appBar: AppBar(
         title: const Text(
           'Others',
-          style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
         ),
         backgroundColor: Colors.orange,
         leading: IconButton(

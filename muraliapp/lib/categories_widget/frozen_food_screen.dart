@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:muraliapp/categories_widget/card2.dart';
 import 'package:muraliapp/countdowntimer.dart';
+import 'package:muraliapp/home.dart';
 
 class FrozenFoodWidget extends StatefulWidget {
   const FrozenFoodWidget({Key? key}) : super(key: key);
@@ -30,7 +31,11 @@ class _FrozenFoodpage extends State<FrozenFoodWidget> {
             actions: <Widget>[
               TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomepageWidget()),
+                    );
                   },
                   child: const Text('OK'))
             ],
@@ -44,7 +49,6 @@ class _FrozenFoodpage extends State<FrozenFoodWidget> {
       appBar: AppBar(
         title: const Text(
           'Frozen Foods',
-          style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
         ),
         backgroundColor: Colors.orange,
         leading: IconButton(

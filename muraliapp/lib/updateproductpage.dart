@@ -229,29 +229,61 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
           "Additional Information": additionalinfo.text,
           "Uniqueid": widget.uniqueid_1,
         });
-        NotificationApi.showScheduledNotification(
-            id: widget.uniqueid_1,
-            title: "Expiring Tomorrow",
-            body: 'Your product ' +
-                nameofproduct.text +
-                ' is going to be expired tomorrow. Please use it today or remove it.',
-            scheduledDate: day2 != null
-                ? DateTime(
-                    day2!.subtract(const Duration(days: 1)).year,
-                    day2!.subtract(const Duration(days: 1)).month,
-                    day2!.subtract(const Duration(days: 1)).day,
-                    10,
-                    0,
-                    0,
-                    0)
-                : DateTime(
-                    day3!.subtract(const Duration(days: 1)).year,
-                    day3!.subtract(const Duration(days: 1)).month,
-                    day3!.subtract(const Duration(days: 1)).day,
-                    10,
-                    0,
-                    0,
-                    0));
+
+        if ((day2 != null
+                ? days_calculation(DateTime.now(), day2!)
+                : days_calculation(DateTime.now(), day3!)) <
+            2) {
+          NotificationApi.showScheduledNotification(
+              id: widget.uniqueid_1,
+              title: "Expiring Tomorrow",
+              body: 'Your product ' +
+                  nameofproduct.text +
+                  ' is going to be expired tomorrow. Please use it today or remove it.',
+              scheduledDate: DateTime.now().add(Duration(minutes: 2)));
+          print(DateTime.now().add(Duration(minutes: 2)));
+        } else {
+          NotificationApi.showScheduledNotification(
+              id: widget.uniqueid_1,
+              title: "Expiring Tomorrow",
+              body: 'Your product ' +
+                  nameofproduct.text +
+                  ' is going to be expired tomorrow. Please use it today or remove it.',
+              scheduledDate: day2 != null
+                  ? DateTime(
+                      day2!.subtract(const Duration(days: 1)).year,
+                      day2!.subtract(const Duration(days: 1)).month,
+                      day2!.subtract(const Duration(days: 1)).day,
+                      10,
+                      0,
+                      0,
+                      0)
+                  : DateTime(
+                      day3!.subtract(const Duration(days: 1)).year,
+                      day3!.subtract(const Duration(days: 1)).month,
+                      day3!.subtract(const Duration(days: 1)).day,
+                      10,
+                      0,
+                      0,
+                      0));
+          print(day2 != null
+              ? DateTime(
+                  day2!.subtract(const Duration(days: 1)).year,
+                  day2!.subtract(const Duration(days: 1)).month,
+                  day2!.subtract(const Duration(days: 1)).day,
+                  10,
+                  0,
+                  0,
+                  0)
+              : DateTime(
+                  day3!.subtract(const Duration(days: 1)).year,
+                  day3!.subtract(const Duration(days: 1)).month,
+                  day3!.subtract(const Duration(days: 1)).day,
+                  10,
+                  0,
+                  0,
+                  0));
+        }
 
         Navigator.canPop(context) ? Navigator.pop(context) : null;
       } finally {
@@ -498,6 +530,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                           'Medicine',
                           'Frozen Food',
                           'Others',
+                          'Condiments',
                         ].map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,

@@ -31,7 +31,12 @@ class MyCustomForm extends StatefulWidget {
 }
 
 class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
-  late double num1 = 0.0, num2 = 0.0, num3 = 0.0, num4 = 0.0, num5 = 0.0;
+  late double num1 = 0.0,
+      num2 = 0.0,
+      num3 = 0.0,
+      num4 = 0.0,
+      num5 = 0.0,
+      num6 = 0.0;
   Stream<DocumentSnapshot> provideDocumentFieldStream() {
     return FirebaseFirestore.instance
         .collection('users')
@@ -62,12 +67,14 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
           num3 = doc.get('Medicine').toDouble();
           num4 = doc.get('Frozen Food').toDouble();
           num5 = doc.get('Others').toDouble();
+          num6 = doc.get('Condiments').toDouble();
           Map<String, double> datamap = {
             'Bakery': num1,
             'Dairy': num2,
             'Medicine': num3,
             'Frozen Food': num4,
             'Others': num5,
+            'Condiments': num6,
           };
           return Column(children: [
             Expanded(
@@ -76,7 +83,8 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                       num2 != 0.0 ||
                       num3 != 0.0 ||
                       num4 != 0.0 ||
-                      num5 != 0.0)
+                      num5 != 0.0 ||
+                      num6 != 0.0)
                   ? Container(
                       child: Center(
                           child: PieChart(
@@ -100,7 +108,8 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                           num2 != 0.0 ||
                           num3 != 0.0 ||
                           num4 != 0.0 ||
-                          num5 != 0.0)
+                          num5 != 0.0 ||
+                          num6 != 0.0)
                       ? ElevatedButton(
                           onPressed: () {
                             showError();
@@ -175,7 +184,8 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
       "Dairy": 0,
       "Medicine": 0,
       "Frozen Food": 0,
-      "Others": 0
+      "Others": 0,
+      "Condiments": 0
     });
   }
 }

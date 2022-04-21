@@ -49,16 +49,11 @@ class _Dairypage extends State<DairyWidget> {
       appBar: AppBar(
         title: const Text(
           'Dairy',
-          style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
         ),
         backgroundColor: Colors.orange,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            /*Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const Homepage2Widget()),
-            );*/
             Navigator.of(context).pop();
           },
         ),
@@ -115,7 +110,6 @@ class _Dairypage extends State<DairyWidget> {
               ? ListView(
                   children:
                       snapshot.data!.docs.map((DocumentSnapshot document) {
-                    //countdowntimer(FirebaseAuth.instance.currentUser,document.id, data[])
                     Map<String, dynamic> data =
                         document.data()! as Map<String, dynamic>;
                     countdowntimer(

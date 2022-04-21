@@ -50,7 +50,6 @@ class _Bakerypage extends State<BakeryWidget> {
       appBar: AppBar(
         title: const Text(
           'Bakery',
-          style: TextStyle(color: Color.fromRGBO(49, 27, 146, 1)),
         ),
         backgroundColor: Colors.orange,
         leading: IconButton(

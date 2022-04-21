@@ -2,13 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:muraliapp/card_widget.dart';
 import 'package:muraliapp/categories_widget/bakery_screen.dart';
+import 'package:muraliapp/categories_widget/condiments.dart';
 import 'package:muraliapp/categories_widget/dairy_screen.dart';
 import 'package:muraliapp/categories_widget/frozen_food_screen.dart';
 import 'package:muraliapp/categories_widget/medicine_screen.dart';
 import 'package:muraliapp/categories_widget/others.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:muraliapp/countdowntimer.dart';
 import 'package:muraliapp/login_signup_widgets/login.dart';
 
 class HomepageWidget extends StatefulWidget {
@@ -39,76 +39,53 @@ class _Homepage extends State<HomepageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return FirebaseAuth.instance.currentUser != null
-        ? StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('users')
-                .doc(FirebaseAuth.instance.currentUser!.uid)
-                .collection("user_orders")
-                .snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              snapshot.data!.docs.map((DocumentSnapshot document) {
-                Map<String, dynamic> data =
-                    document.data()! as Map<String, dynamic>;
-                countdowntimer(FirebaseAuth.instance.currentUser, document.id,
-                    data['Expiry Date'], data['Name'], data['Category']);
-              });
-              return Scaffold(
-                appBar: AppBar(
-                  title: const Text(
-                    'Spence',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  backgroundColor: Colors.orange,
-                  actions: <Widget>[
-                    Padding(
-                        padding: const EdgeInsets.only(right: 20.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text(
-                                        'Are you sure you want to Logout?'),
-                                    actions: <Widget>[
-                                      TextButton(
-                                          onPressed: () async {
-                                            await signOut();
-                                            Navigator.of(context)
-                                                .pushAndRemoveUntil(
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            LoginPage()),
-                                                    (Route<dynamic> route) =>
-                                                        false);
-                                          },
-                                          child: const Text('Yes',
-                                              style: TextStyle(
-                                                  color: Colors.black))),
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text('No',
-                                              style: TextStyle(
-                                                  color: Colors.orange)))
-                                    ],
-                                  );
-                                });
-                          },
-                          child: const Icon(
-                            Icons.logout,
-                            size: 26.0,
-                          ),
-                        )),
-                  ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Spence',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.orange,
+        actions: <Widget>[
+          Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Are you sure you want to Logout?'),
+                          actions: <Widget>[
+                            TextButton(
+                                onPressed: () async {
+                                  await signOut();
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (context) => LoginPage()),
+                                      (Route<dynamic> route) => false);
+                                },
+                                child: const Text('Yes',
+                                    style: TextStyle(color: Colors.black))),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('No',
+                                    style: TextStyle(color: Colors.orange)))
+                          ],
+                        );
+                      });
+                },
+                child: const Icon(
+                  Icons.logout,
+                  size: 26.0,
                 ),
-                body: const MyCustomForm(),
-              );
-            })
-        : Container();
+              )),
+        ],
+      ),
+      body: const MyCustomForm(),
+    );
   }
 }
 
@@ -132,6 +109,7 @@ class MyCustomForm extends StatelessWidget {
           "Medicine": 0,
           "Frozen Food": 0,
           "Others": 0,
+          "Condiments": 0
         };
         FirebaseFirestore.instance
             .collection('users')
@@ -179,6 +157,7 @@ class MyCustomForm extends StatelessWidget {
           "Medicine": 0,
           "Frozen Food": 0,
           "Others": 0,
+          "Condiments": 0
         };
         FirebaseFirestore.instance
             .collection('users')
@@ -194,21 +173,24 @@ class MyCustomForm extends StatelessWidget {
       'Dairy',
       'Medicine',
       'Frozen Food',
-      'Others'
+      'Others',
+      "Condiments"
     ];
     List<String> _screenpic = [
       'assets/bakery 1.png',
       'assets/dairy 1.png',
       'assets/pills 1.png',
       'assets/frozen-food 1.png',
-      'assets/bakery.png'
+      'assets/bakery.png',
+      'assets/condiments.png'
     ];
     List<Widget> _screenname = [
       const BakeryWidget(),
       const DairyWidget(),
       const MedicineWidget(),
       const FrozenFoodWidget(),
-      const OthersWidget()
+      const OthersWidget(),
+      const CondimentsWidget(),
     ];
 
     Stream<DocumentSnapshot> provideDocumentFieldStream() {
@@ -258,6 +240,12 @@ class MyCustomForm extends StatelessWidget {
               image: _screenpic[3],
               screen_name: _screenname[3],
               num: doc.get('Frozen Food'),
+            ),
+            CardWidget(
+              value: _value[5],
+              image: _screenpic[5],
+              screen_name: _screenname[5],
+              num: doc.get('Condiments'),
             ),
             CardWidget(
               value: _value[4],

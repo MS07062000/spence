@@ -5,20 +5,21 @@ import 'package:muraliapp/categories_widget/card2.dart';
 import 'package:muraliapp/countdowntimer.dart';
 import 'package:muraliapp/home.dart';
 
-class MedicineWidget extends StatefulWidget {
-  const MedicineWidget({Key? key}) : super(key: key);
+class CondimentsWidget extends StatefulWidget {
+  const CondimentsWidget({Key? key}) : super(key: key);
 
   @override
-  State<MedicineWidget> createState() => _Medicinepage();
+  State<CondimentsWidget> createState() => _Condimentspage();
 }
 
-class _Medicinepage extends State<MedicineWidget> {
+class _Condimentspage extends State<CondimentsWidget> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
   int number = 0;
   final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
       .collection('users')
       .doc(FirebaseAuth.instance.currentUser!.uid)
-      .collection("user_orders")
-      .where('Category', isEqualTo: 'Medicine')
+      .collection('user_orders')
+      .where('Category', isEqualTo: 'Condiments')
       .snapshots();
 
   showError(String errormessage) {
@@ -48,7 +49,7 @@ class _Medicinepage extends State<MedicineWidget> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Medicine',
+          'Condiments',
         ),
         backgroundColor: Colors.orange,
         leading: IconButton(
@@ -91,7 +92,6 @@ class _Medicinepage extends State<MedicineWidget> {
                   color: Colors.orange,
                 ));
           }
-
           List list1 = [];
           List list2 = [];
           snapshot.data!.docs.map((DocumentSnapshot document) {

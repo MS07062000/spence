@@ -256,6 +256,8 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
             widget.navigatorKey1.currentState!.pushNamed("Medicine");
           } else if (category == 'Frozen Food') {
             widget.navigatorKey1.currentState!.pushNamed("Frozen Food");
+          } else if (category == 'Condiments') {
+            widget.navigatorKey1.currentState!.pushNamed("Condiments");
           } else {
             widget.navigatorKey1.currentState!.pushNamed("Others");
           }
@@ -682,6 +684,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                           'Medicine',
                           'Frozen Food',
                           'Others',
+                          'Condiments',
                         ].map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,

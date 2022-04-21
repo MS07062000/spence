@@ -212,7 +212,7 @@ class _MyCardWidgetState extends State<Card2Widget> {
         ),
       ),
       elevation: 0,
-      margin: const EdgeInsets.all(10),
+      margin: const EdgeInsets.only(left: 10, right: 10, top: 5.0, bottom: 5.0),
       shape: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
       ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:muraliapp/addproductpage.dart';
 import 'package:muraliapp/categories_widget/bakery_screen.dart';
+import 'package:muraliapp/categories_widget/condiments.dart';
 import 'package:muraliapp/categories_widget/dairy_screen.dart';
 import 'package:muraliapp/categories_widget/frozen_food_screen.dart';
 import 'package:muraliapp/categories_widget/medicine_screen.dart';
@@ -42,6 +43,7 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
   void onClickedNotification(String? payload) {}
 
   var navigatorKeyList = [
+    GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
@@ -171,6 +173,7 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
                           'Medicine': (context) => MedicineWidget(),
                           'Frozen Food': (context) => FrozenFoodWidget(),
                           'Others': (context) => OthersWidget(),
+                          'Condiments': (context) => CondimentsWidget(),
                         },
                       );
                     case 1:
@@ -193,6 +196,7 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
                           'Medicine': (context) => MedicineWidget(),
                           'Frozen Food': (context) => FrozenFoodWidget(),
                           'Others': (context) => OthersWidget(),
+                          'Condiments': (context) => CondimentsWidget(),
                         },
                       );
                     case 2:
@@ -217,6 +221,7 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
                           'Frozen Food': (context) => FrozenFoodWidget(),
                           'Others': (context) => OthersWidget(),
                           'home': (context) => HomepageWidget(),
+                          'Condiments': (context) => CondimentsWidget(),
                         },
                       );
                     case 3:
@@ -240,6 +245,7 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
                           'Frozen Food': (context) => FrozenFoodWidget(),
                           'Others': (context) => OthersWidget(),
                           'Garbage': (context) => garbagereportWidget(),
+                          'Condiments': (context) => CondimentsWidget(),
                         },
                       );
                     case 4:
@@ -262,6 +268,7 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
                           'Medicine': (context) => MedicineWidget(),
                           'Frozen Food': (context) => FrozenFoodWidget(),
                           'Others': (context) => OthersWidget(),
+                          'Condiments': (context) => CondimentsWidget(),
                         },
                       );
                     default:
@@ -352,6 +359,7 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
                         'Medicine': (context) => MedicineWidget(),
                         'Frozen Food': (context) => FrozenFoodWidget(),
                         'Others': (context) => OthersWidget(),
+                        'Condiments': (context) => CondimentsWidget(),
                       },
                     );
                   case 1:
@@ -374,6 +382,7 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
                         'Medicine': (context) => MedicineWidget(),
                         'Frozen Food': (context) => FrozenFoodWidget(),
                         'Others': (context) => OthersWidget(),
+                        'Condiments': (context) => CondimentsWidget(),
                       },
                     );
                   case 2:
@@ -398,6 +407,7 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
                         'Frozen Food': (context) => FrozenFoodWidget(),
                         'Others': (context) => OthersWidget(),
                         'home': (context) => HomepageWidget(),
+                        'Condiments': (context) => CondimentsWidget(),
                       },
                     );
                   case 3:
@@ -421,6 +431,7 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
                         'Frozen Food': (context) => FrozenFoodWidget(),
                         'Others': (context) => OthersWidget(),
                         'Garbage': (context) => garbagereportWidget(),
+                        'Condiments': (context) => CondimentsWidget(),
                       },
                     );
                   case 4:
@@ -443,6 +454,7 @@ class _BottomNavigation extends State<BottomNavigationBarWidget> {
                         'Medicine': (context) => MedicineWidget(),
                         'Frozen Food': (context) => FrozenFoodWidget(),
                         'Others': (context) => OthersWidget(),
+                        'Condiments': (context) => CondimentsWidget(),
                       },
                     );
                   default:
