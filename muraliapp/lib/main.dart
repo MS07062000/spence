@@ -8,7 +8,6 @@ import 'package:muraliapp/categories_widget/others.dart';
 import 'package:muraliapp/login_signup_widgets/login.dart';
 import 'package:muraliapp/login_signup_widgets/welcome.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,20 +18,6 @@ void main() async {
       messagingSenderId: "801106562107",
       projectId: "spence-38472",
     ),
-  );
-
-  AwesomeNotifications().initialize(
-    'resource://drawable/app_icon',
-    [
-      NotificationChannel(
-        channelKey: 'scheduled_channel',
-        channelName: 'Scheduled Notifications',
-        channelDescription: 'Scheduled Description',
-        defaultColor: Colors.orange,
-        importance: NotificationImportance.High,
-        channelShowBadge: true,
-      ),
-    ],
   );
   runApp(const MyApp());
 }

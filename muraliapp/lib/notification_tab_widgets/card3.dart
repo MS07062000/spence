@@ -98,6 +98,27 @@ class _MyCardWidgetState extends State<Card3Widget> {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     final User? user = _auth.currentUser;
     final _uid = user!.uid;
+    if (widget.colour == 1) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('notification')
+          .doc('count')
+          .update({
+        "length": FieldValue.increment(-1),
+        "length2": FieldValue.increment(-1)
+      });
+    }
+
+    if (widget.colour == 0) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('notification')
+          .doc('count')
+          .update({"length2": FieldValue.increment(-1)});
+    }
+
     return FirebaseFirestore.instance
         .collection('users')
         .doc(_uid)
@@ -134,7 +155,7 @@ class _MyCardWidgetState extends State<Card3Widget> {
 
 Color getColor(int colour) {
   if (colour == 1) {
-    return Colors.grey;
+    return Colors.grey.shade200;
   }
   return Colors.white;
 }

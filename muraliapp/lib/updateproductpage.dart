@@ -1,11 +1,10 @@
 import 'dart:core';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:muraliapp/notifications.dart';
+import 'package:muraliapp/notificationapi.dart';
 
 class UpdateproductpageWidget extends StatefulWidget {
   final String manufacturingdate;
@@ -230,22 +229,29 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
           "Additional Information": additionalinfo.text,
           "Uniqueid": widget.uniqueid_1,
         });
-        createExpiryNotification(
-            widget.uniqueid_1,
-            nameofproduct.text,
-            day2 != null
-                ? NotificationCalendar(
-                    year: day2!.subtract(const Duration(days: 1)).year,
-                    month: day2!.subtract(const Duration(days: 1)).month,
-                    day: day2!.subtract(const Duration(days: 1)).day,
-                    hour: 10,
-                    minute: 0)
-                : NotificationCalendar(
-                    year: day3!.subtract(const Duration(days: 1)).year,
-                    month: day3!.subtract(const Duration(days: 1)).month,
-                    day: day3!.subtract(const Duration(days: 1)).day,
-                    hour: 10,
-                    minute: 0));
+        NotificationApi.showScheduledNotification(
+            id: widget.uniqueid_1,
+            title: "Expiring Tomorrow",
+            body: 'Your product ' +
+                nameofproduct.text +
+                ' is going to be expired tomorrow. Please use it today or remove it.',
+            scheduledDate: day2 != null
+                ? DateTime(
+                    day2!.subtract(const Duration(days: 1)).year,
+                    day2!.subtract(const Duration(days: 1)).month,
+                    day2!.subtract(const Duration(days: 1)).day,
+                    10,
+                    0,
+                    0,
+                    0)
+                : DateTime(
+                    day3!.subtract(const Duration(days: 1)).year,
+                    day3!.subtract(const Duration(days: 1)).month,
+                    day3!.subtract(const Duration(days: 1)).day,
+                    10,
+                    0,
+                    0,
+                    0));
 
         Navigator.canPop(context) ? Navigator.pop(context) : null;
       } finally {
@@ -432,15 +438,29 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                           child: DropdownButtonHideUnderline(
                             child: DropdownButtonFormField<String>(
                               decoration: _inputdec("Unit"),
+                              menuMaxHeight:
+                                  MediaQuery.of(context).size.height * 0.25,
                               style: const TextStyle(color: Colors.black),
                               items: <String>[
-                                'Android',
-                                'IOS',
-                                'Flutter',
-                                'Node',
-                                'Java',
-                                'Python',
-                                'None',
+                                'kg',
+                                'g',
+                                'lt',
+                                'ml',
+                                'lb',
+                                'oz',
+                                'quart',
+                                'gallon',
+                                'piece',
+                                'pack',
+                                'bottle',
+                                'jar',
+                                'can',
+                                'box',
+                                'bag',
+                                'table',
+                                'tube',
+                                'roll',
+                                'none',
                               ].map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,

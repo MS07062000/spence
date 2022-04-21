@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:muraliapp/categories_widget/card2.dart';
 import 'package:muraliapp/countdowntimer.dart';
-import 'package:muraliapp/home2.dart';
+import 'package:muraliapp/home.dart';
 
 class MedicineWidget extends StatefulWidget {
   const MedicineWidget({Key? key}) : super(key: key);
@@ -34,7 +34,7 @@ class _Medicinepage extends State<MedicineWidget> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Homepage2Widget()),
+                          builder: (context) => const HomepageWidget()),
                     );
                   },
                   child: const Text('OK'))
@@ -55,10 +55,6 @@ class _Medicinepage extends State<MedicineWidget> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            /*Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const Homepage2Widget()),
-            );*/
             Navigator.of(context).pop();
           },
         ),

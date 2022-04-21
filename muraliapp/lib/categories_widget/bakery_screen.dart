@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:muraliapp/categories_widget/card2.dart';
 import 'package:muraliapp/countdowntimer.dart';
-import 'package:muraliapp/home2.dart';
+import 'package:muraliapp/home.dart';
 
 class BakeryWidget extends StatefulWidget {
   const BakeryWidget({Key? key}) : super(key: key);
@@ -35,7 +35,7 @@ class _Bakerypage extends State<BakeryWidget> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Homepage2Widget()),
+                          builder: (context) => const HomepageWidget()),
                     );
                   },
                   child: const Text('OK'))

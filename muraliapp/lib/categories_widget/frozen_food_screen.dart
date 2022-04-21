@@ -50,10 +50,6 @@ class _FrozenFoodpage extends State<FrozenFoodWidget> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            /*Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const Homepage2Widget()),
-            );*/
             Navigator.of(context).pop();
           },
         ),

@@ -15,6 +15,7 @@ import 'package:muraliapp/home.dart';
 import 'package:muraliapp/login_signup_widgets/login.dart';
 import 'package:muraliapp/login_signup_widgets/welcome.dart';
 import 'package:muraliapp/notification_tab_widgets/notificationpage.dart';
+import 'package:muraliapp/notificationapi.dart';
 
 /// This is the stateful widget that the main application instantiates.
 // ignore: must_be_immutable
@@ -27,6 +28,19 @@ class BottomNavigationBarWidget extends StatefulWidget {
 
 /// This is the private State class that goes with Bottom_navigation_bar_widget.
 class _BottomNavigation extends State<BottomNavigationBarWidget> {
+  @override
+  void initState() {
+    super.initState();
+    NotificationApi.init(initScheduled: true);
+    listenNotifications();
+  }
+
+  void listenNotifications() {
+    NotificationApi.onNotifications.stream.listen(onClickedNotification);
+  }
+
+  void onClickedNotification(String? payload) {}
+
   var navigatorKeyList = [
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),

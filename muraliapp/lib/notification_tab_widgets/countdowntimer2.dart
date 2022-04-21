@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-void countdowntimer2(user, id, date) {
+void countdowntimer2(user, id, date, color) {
   final _uid = user.uid;
   int days = days_calculation(DateTime.now(), date);
   if (days >= 30) {
@@ -11,12 +11,26 @@ void countdowntimer2(user, id, date) {
         .doc(id)
         .delete();
 
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(_uid)
-        .collection('notification')
-        .doc('count')
-        .update({'length2': FieldValue.increment(-1)});
+    if (color == 1) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(_uid)
+          .collection('notification')
+          .doc('count')
+          .update({
+        "length": FieldValue.increment(-1),
+        "length2": FieldValue.increment(-1)
+      });
+    }
+
+    if (color == 0) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(_uid)
+          .collection('notification')
+          .doc('count')
+          .update({"length2": FieldValue.increment(-1)});
+    }
   } else {}
 }
 

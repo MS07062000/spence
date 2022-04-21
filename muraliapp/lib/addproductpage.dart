@@ -1,6 +1,5 @@
 import 'dart:core';
 import 'dart:io';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:muraliapp/notifications.dart';
+import 'package:muraliapp/notificationapi.dart';
 
 class AddproductpageWidget extends StatefulWidget {
   final CupertinoTabController controller;
@@ -211,42 +210,41 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
               .doc("count")
               .update({category: FieldValue.increment(1)});
 
-          String localTimeZone =
-              await AwesomeNotifications().getLocalTimeZoneIdentifier();
           if ((day2 != null
                   ? days_calculation(DateTime.now(), day2!)
                   : days_calculation(DateTime.now(), day3!)) <
               2) {
-            createExpiryNotification(
-                uniqueid,
-                _nameofproduct.text,
-                NotificationCalendar(
-                    timeZone: localTimeZone,
-                    year: DateTime.now().year,
-                    month: DateTime.now().month,
-                    day: DateTime.now().day,
-                    hour: DateTime.now().hour,
-                    minute: DateTime.now().minute + 2));
+            NotificationApi.showScheduledNotification(
+                id: uniqueid,
+                title: "Expiring Tomorrow",
+                body: 'Your product ' +
+                    _nameofproduct.text +
+                    ' is going to be expired tomorrow. Please use it today or remove it.',
+                scheduledDate: DateTime.now().add(Duration(minutes: 2)));
           } else {
-            createExpiryNotification(
-                uniqueid,
-                _nameofproduct.text,
-                day2 != null
-                    ? NotificationCalendar(
-                        timeZone: localTimeZone,
-                        year: day2!.subtract(const Duration(days: 1)).year,
-                        month: day2!.subtract(const Duration(days: 1)).month,
-                        day: day2!.subtract(const Duration(days: 1)).day,
-                        hour: 10,
-                        minute: 0,
-                      )
-                    : NotificationCalendar(
-                        year: day3!.subtract(const Duration(days: 1)).year,
-                        month: day3!.subtract(const Duration(days: 1)).month,
-                        day: day3!.subtract(const Duration(days: 1)).day,
-                        hour: 10,
-                        minute: 0,
-                        timeZone: localTimeZone));
+            NotificationApi.showScheduledNotification(
+                id: uniqueid,
+                title: "Expiring Tomorrow",
+                body: 'Your product ' +
+                    _nameofproduct.text +
+                    ' is going to be expired tomorrow. Please use it today or remove it.',
+                scheduledDate: day2 != null
+                    ? DateTime(
+                        day2!.subtract(const Duration(days: 1)).year,
+                        day2!.subtract(const Duration(days: 1)).month,
+                        day2!.subtract(const Duration(days: 1)).day,
+                        10,
+                        0,
+                        0,
+                        0)
+                    : DateTime(
+                        day3!.subtract(const Duration(days: 1)).year,
+                        day3!.subtract(const Duration(days: 1)).month,
+                        day3!.subtract(const Duration(days: 1)).day,
+                        10,
+                        0,
+                        0,
+                        0));
           }
 
           if (category == 'Bakery') {

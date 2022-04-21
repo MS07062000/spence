@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:muraliapp/notificationapi.dart';
 import 'package:muraliapp/updateproductpage.dart';
-import 'package:muraliapp/notifications.dart';
 
 class Card2Widget extends StatefulWidget {
   final String docid;
@@ -231,7 +231,7 @@ class _MyCardWidgetState extends State<Card2Widget> {
         .doc(widget.docid)
         .delete();
 
-    cancelScheduledNotifications(widget.uniqueid);
+    NotificationApi.cancel(widget.uniqueid);
     FirebaseFirestore.instance
         .collection('users')
         .doc(_uid)

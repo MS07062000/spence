@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:muraliapp/home2.dart';
+import 'package:muraliapp/home.dart';
 import 'package:muraliapp/notification_tab_widgets/card3.dart';
 import 'package:muraliapp/notification_tab_widgets/countdowntimer2.dart';
 
@@ -27,10 +27,6 @@ class _notificationpage extends State<notificationpageWidget> {
     }
   });
 
-  /*FirebaseFirestore.instance
-      .collection('users')
-      .doc(FirebaseAuth.instance.currentUser!.uid)
-      .collection('notification').doc('count').update({"length":0});*/
   final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
       .collection('users')
       .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -51,7 +47,7 @@ class _notificationpage extends State<notificationpageWidget> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const Homepage2Widget()),
+                          builder: (context) => const HomepageWidget()),
                     );
                   },
                   child:
@@ -87,6 +83,12 @@ class _notificationpage extends State<notificationpageWidget> {
   }
 
   Future<void> deleteUser() async {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('notification')
+        .doc('count')
+        .update({"length": 0, "length2": 0});
     final batch = FirebaseFirestore.instance.batch();
     CollectionReference usersStream_2 = FirebaseFirestore.instance
         .collection('users')
@@ -181,7 +183,7 @@ class _notificationpage extends State<notificationpageWidget> {
                     Map<String, dynamic> data =
                         document.data()! as Map<String, dynamic>;
                     countdowntimer2(FirebaseAuth.instance.currentUser,
-                        document.id, data['Expiry Date']);
+                        document.id, data['Expiry Date'], data['color']);
                     return Card3Widget(
                       docid: document.id,
                       name: data['Name'],
