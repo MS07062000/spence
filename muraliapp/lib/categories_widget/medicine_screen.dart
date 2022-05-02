@@ -113,12 +113,12 @@ class _Medicinepage extends State<MedicineWidget> {
                     //countdowntimer(FirebaseAuth.instance.currentUser,document.id, data[])
                     Map<String, dynamic> data =
                         document.data()! as Map<String, dynamic>;
-                    countdowntimer(
+                    /*countdowntimer(
                         FirebaseAuth.instance.currentUser,
                         document.id,
                         data['Expiry Date'],
                         data['Name'],
-                        data['Category']);
+                        data['Category']);*/
                     return Card2Widget(
                       docid: document.id,
                       name: data['Name'],
@@ -160,6 +160,13 @@ class _Medicinepage extends State<MedicineWidget> {
                       ? ListView.builder(
                           itemCount: list2.length,
                           itemBuilder: (BuildContext context, int index) {
+                            countdowntimer(
+                                FirebaseAuth.instance.currentUser,
+                                list2[index]['id'],
+                                list2[index]['Expiry Date'],
+                                list2[index]['Name'],
+                                list2[index]['Category'],
+                                1);
                             return Card2Widget(
                               docid: list2[index]['id'],
                               name: list2[index]['Name'],

@@ -9,6 +9,7 @@ import 'package:muraliapp/categories_widget/medicine_screen.dart';
 import 'package:muraliapp/categories_widget/others.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:muraliapp/countdowntimer.dart';
 import 'package:muraliapp/login_signup_widgets/login.dart';
 
 class HomepageWidget extends StatefulWidget {
@@ -84,13 +85,26 @@ class _Homepage extends State<HomepageWidget> {
               )),
         ],
       ),
-      body: const MyCustomForm(),
+      body: MyCustomForm(),
     );
   }
 }
 
 class MyCustomForm extends StatelessWidget {
-  const MyCustomForm({Key? key}) : super(key: key);
+  CollectionReference users = FirebaseFirestore.instance
+      .collection('users')
+      .doc(FirebaseAuth.instance.currentUser!.uid)
+      .collection("user_orders");
+
+  Future<void> batchupdate() {
+    return users.get().then((querySnapshot) {
+      querySnapshot.docs.forEach((document) {
+        Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+        countdowntimer(FirebaseAuth.instance.currentUser, document.id,
+            data['Expiry Date'], data['Name'], data['Category'], 0);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -216,6 +230,7 @@ class MyCustomForm extends StatelessWidget {
                 ));
           }
           var doc = snapshot.data as DocumentSnapshot;
+          batchupdate();
           return ListView(children: [
             CardWidget(
               value: _value[0],
