@@ -125,7 +125,7 @@ class _MyCardWidgetState extends State<Card2Widget> {
                                       child: Text(
                                     "Details",
                                     style: TextStyle(
-                                        color: Colors.blue, fontSize: 20),
+                                        color: Colors.orange, fontSize: 20),
                                   )),
                                   Container(
                                     child: Table(

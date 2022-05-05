@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "801106562107-jeun6rndqu2bdp0l04pdob70sauapt7m.apps.googleusercontent.com",
+          "client_id": "801106562107-elu0nkgfdl122fqnuqlp4q929pm5n3av.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.muraliapp",
-            "certificate_hash": "ea202f26013c350199a515e9a869327f9a297c73"
+            "certificate_hash": "3a76083363ff3fc364ff1ed68c50dd1d8d7793a6"
           }
         },
         {

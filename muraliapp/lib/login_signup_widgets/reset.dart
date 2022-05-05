@@ -65,20 +65,20 @@ class _ResetScreenState extends State<ResetScreen> {
                     controller: emailcont,
                     decoration: InputDecoration(
                       labelText: 'E-mail',
-                      suffixIcon: const Icon(Icons.email),
+                      floatingLabelStyle: const TextStyle(color: Colors.orange),
+                      suffixIcon: const Icon(Icons.email, color: Colors.orange),
                       enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(width: 3, color: Colors.purple.shade800),
+                        borderSide: BorderSide(width: 1, color: Colors.orange),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderSide:
-                            const BorderSide(width: 3, color: Colors.orange),
+                            const BorderSide(width: 1, color: Colors.orange),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       errorBorder: OutlineInputBorder(
                         borderSide:
-                            const BorderSide(color: Colors.red, width: 3),
+                            const BorderSide(color: Colors.red, width: 1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
@@ -100,7 +100,7 @@ class _ResetScreenState extends State<ResetScreen> {
                                 color: Colors.orange,
                               ),
                             ),
-                            backgroundColor: Colors.purple,
+                            backgroundColor: Colors.white,
                           ),
                         );
                         try {
