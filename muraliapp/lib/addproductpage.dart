@@ -108,7 +108,6 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
   late DateTime day1;
   DateTime? day2;
   DateTime? day3;
-
   void clearformfield() {
     _formGlobalKey.currentState!.reset();
     _pickedImage = null;
@@ -123,6 +122,8 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
     _location.clear();
     _additionalinfo.clear();
     _quantitycontroller.clear();
+    day2 = null;
+    day3 = null;
   }
 
   showError() {
@@ -220,7 +221,8 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                 body: 'Your product ' +
                     _nameofproduct.text +
                     ' is going to be expired tomorrow. Please use it today or remove it.',
-                scheduledDate: DateTime.now());
+                scheduledDate: DateTime.now().add(const Duration(minutes: 2)));
+            //print(DateTime.now().add(Duration(minutes: 2)));
           } else {
             NotificationApi.showScheduledNotification(
                 id: uniqueid,
@@ -245,6 +247,23 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                         0,
                         0,
                         0));
+            /*print(day2 != null
+                ? DateTime(
+                    day2!.subtract(const Duration(days: 1)).year,
+                    day2!.subtract(const Duration(days: 1)).month,
+                    day2!.subtract(const Duration(days: 1)).day,
+                    10,
+                    0,
+                    0,
+                    0)
+                : DateTime(
+                    day3!.subtract(const Duration(days: 1)).year,
+                    day3!.subtract(const Duration(days: 1)).month,
+                    day3!.subtract(const Duration(days: 1)).day,
+                    10,
+                    0,
+                    0,
+                    0));*/
           }
 
           if (category == 'Bakery') {
@@ -359,14 +378,14 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                                         await _pickImageCamera();
                                         Navigator.of(context).pop();
                                       },
-                                      splashColor: Colors.purple,
+                                      splashColor: Colors.green,
                                       child: Row(
                                         children: const [
                                           Padding(
                                             padding: EdgeInsets.all(8.0),
                                             child: Icon(
                                               Icons.camera,
-                                              color: Colors.purple,
+                                              color: Colors.orange,
                                             ),
                                           ),
                                           Text(
@@ -374,7 +393,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                                             style: TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w500,
-                                                color: Colors.purple),
+                                                color: Colors.orange),
                                           )
                                         ],
                                       ),
@@ -387,14 +406,14 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
 
                                         Navigator.of(context).pop();
                                       },
-                                      splashColor: Colors.purple,
+                                      splashColor: Colors.green,
                                       child: Row(
                                         children: const [
                                           Padding(
                                             padding: EdgeInsets.all(8.0),
                                             child: Icon(
                                               Icons.image,
-                                              color: Colors.purple,
+                                              color: Colors.orange,
                                             ),
                                           ),
                                           Text(
@@ -402,7 +421,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                                             style: TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w500,
-                                                color: Colors.purple),
+                                                color: Colors.orange),
                                           )
                                         ],
                                       ),
@@ -422,7 +441,7 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                                             padding: EdgeInsets.all(8.0),
                                             child: Icon(
                                               Icons.remove_circle,
-                                              color: Colors.black,
+                                              color: Colors.red,
                                             ),
                                           ),
                                           Text(
@@ -553,8 +572,8 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.50,
                     child: TextFormField(
-                      readOnly: true,
                       controller: _dateController3,
+                      readOnly: true,
                       decoration:
                           _inputdec2('Best Before', Icons.calendar_today),
                       onTap: () async {
@@ -565,9 +584,6 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                           lastDate: DateTime(DateTime.now().year + 5),
                         ).then((selectedDate) {
                           if (selectedDate != null) {
-                            _dateController3.text =
-                                DateFormat('MM/yyyy').format(selectedDate);
-                            date3 = _dateController3.text;
                             if (selectedDate.month < 12) {
                               day3 = DateTime(
                                   selectedDate.year,
@@ -583,12 +599,14 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
                                           selectedDate.month + 1, 0)
                                       .day);
                             }
+                            _dateController3.text =
+                                DateFormat('dd/MM/yyyy').format(day3!);
+                            date3 = _dateController3.text;
                           }
                         });
                       },
                       validator: (date3) {
-                        if ((date3 == null || date3.isEmpty) &&
-                            (date2.isEmpty)) {
+                        if ((date3!.length < 10) && (date2.length < 10)) {
                           return 'Please select best before month or expiry date.';
                         }
                         return null;

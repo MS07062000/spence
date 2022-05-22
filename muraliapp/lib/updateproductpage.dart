@@ -255,8 +255,8 @@ class _MyCustomStatefulWidgetState extends State<MyCustomForm> {
               body: 'Your product ' +
                   nameofproduct.text +
                   ' is going to be expired tomorrow. Please use it today or remove it.',
-              scheduledDate: DateTime.now());
-          // print(DateTime.now().add(Duration(minutes: 2)));
+              scheduledDate: DateTime.now().add(const Duration(minutes: 2)));
+          //print(DateTime.now().add(Duration(minutes: 2)));
         } else {
           NotificationApi.showScheduledNotification(
               id: widget.uniqueid_1,

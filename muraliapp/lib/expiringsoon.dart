@@ -63,10 +63,6 @@ class _Expiringsoon extends State<ExpiringsoonpageWidget> {
                       child: Text("Sort by Expiry Days"),
                       value: 2,
                     ),
-                    PopupMenuItem(
-                      child: Text("Sort by Quantity"),
-                      value: 3,
-                    ),
                   ])
         ],
       ),
@@ -88,7 +84,6 @@ class _Expiringsoon extends State<ExpiringsoonpageWidget> {
 
           List list1 = [];
           List list2 = [];
-          List list3 = [];
           snapshot.data!.docs.map((DocumentSnapshot document) {
             Map<String, dynamic> data =
                 document.data()! as Map<String, dynamic>;
@@ -96,14 +91,10 @@ class _Expiringsoon extends State<ExpiringsoonpageWidget> {
             data.addEntries(docentries.entries);
             list1.add(data);
             list2.add(data);
-            list3.add(data);
           }).toList();
 
           list1.sort((a, b) => a['Name'].compareTo(b["Name"]));
           list2.sort((a, b) => a['Expiry Days'].compareTo(b["Expiry Days"]));
-          list3.sort((a, b) => a['Quantity']
-              .split(' ')[0]
-              .compareTo(b["Quantity"].split(' ')[0]));
 
           return number == 0
               ? ListView(
@@ -184,36 +175,7 @@ class _Expiringsoon extends State<ExpiringsoonpageWidget> {
                             );
                           },
                         )
-                      : number == 3
-                          ? ListView.builder(
-                              itemCount: list3.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                countdowntimer(
-                                    FirebaseAuth.instance.currentUser,
-                                    list3[index]['id'],
-                                    list3[index]['Expiry Date'],
-                                    list3[index]['Name'],
-                                    list3[index]['Category'],
-                                    0);
-                                return Card2Widget(
-                                  docid: list3[index]['id'],
-                                  name: list3[index]['Name'],
-                                  expirydate: list3[index]['Expiry Date'],
-                                  image: list3[index]['Product Image'],
-                                  quantity: list3[index]['Quantity'],
-                                  manufacturingdate: list3[index]
-                                      ['Manufacturing Date'],
-                                  expirydays: list3[index]['Expiry Days'],
-                                  location: list3[index]['Location'],
-                                  additionalinformation: list3[index]
-                                      ['Additional Information'],
-                                  category: list3[index]['Category'],
-                                  uniqueid: list3[index]['Uniqueid'],
-                                  modifiedname: list3[index]['ModifiedName'],
-                                );
-                              },
-                            )
-                          : new Container();
+                      : new Container();
         },
       ),
     );
