@@ -1,25 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:muraliapp/categories_widget/card2.dart';
-import 'package:muraliapp/countdowntimer.dart';
-import 'package:muraliapp/home.dart';
+import 'package:categories_widget/card2.dart';
+import 'package:countdowntimer.dart';
+import 'package:home.dart';
 
-class CondimentsWidget extends StatefulWidget {
-  const CondimentsWidget({Key? key}) : super(key: key);
+class OthersWidget extends StatefulWidget {
+  const OthersWidget({Key? key}) : super(key: key);
 
   @override
-  State<CondimentsWidget> createState() => _Condimentspage();
+  State<OthersWidget> createState() => _Otherspage();
 }
 
-class _Condimentspage extends State<CondimentsWidget> {
-  final FirebaseAuth auth = FirebaseAuth.instance;
+class _Otherspage extends State<OthersWidget> {
   int number = 0;
   final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
       .collection('users')
       .doc(FirebaseAuth.instance.currentUser!.uid)
-      .collection('user_orders')
-      .where('Category', isEqualTo: 'Condiments')
+      .collection("user_orders")
+      .where('Category', isEqualTo: 'Others')
       .snapshots();
 
   showError(String errormessage) {
@@ -49,7 +48,7 @@ class _Condimentspage extends State<CondimentsWidget> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Condiments',
+          'Others',
         ),
         backgroundColor: Colors.orange,
         leading: IconButton(
@@ -92,6 +91,7 @@ class _Condimentspage extends State<CondimentsWidget> {
                   color: Colors.orange,
                 ));
           }
+
           List list1 = [];
           List list2 = [];
           snapshot.data!.docs.map((DocumentSnapshot document) {

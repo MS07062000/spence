@@ -9,7 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:muraliapp/notificationapi.dart';
+import 'package:notificationapi.dart';
 
 class AddproductpageWidget extends StatefulWidget {
   final CupertinoTabController controller;

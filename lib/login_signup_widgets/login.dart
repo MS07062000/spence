@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:muraliapp/login_signup_widgets/reset.dart';
-import 'package:muraliapp/login_signup_widgets/signup.dart';
+import 'package:login_signup_widgets/reset.dart';
+import 'package:login_signup_widgets/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:email_validator/email_validator.dart';
 

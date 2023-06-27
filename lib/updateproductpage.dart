@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:muraliapp/notificationapi.dart';
+import 'package:notificationapi.dart';
 
 class UpdateproductpageWidget extends StatefulWidget {
   final String manufacturingdate;

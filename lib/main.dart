@@ -1,24 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:muraliapp/bottomnavigationbar.dart';
-import 'package:muraliapp/categories_widget/bakery_screen.dart';
-import 'package:muraliapp/categories_widget/dairy_screen.dart';
-import 'package:muraliapp/categories_widget/frozen_food_screen.dart';
-import 'package:muraliapp/categories_widget/medicine_screen.dart';
-import 'package:muraliapp/categories_widget/others.dart';
-import 'package:muraliapp/login_signup_widgets/login.dart';
-import 'package:muraliapp/login_signup_widgets/welcome.dart';
+import 'package:bottomnavigationbar.dart';
+import 'package:categories_widget/bakery_screen.dart';
+import 'package:categories_widget/dairy_screen.dart';
+import 'package:categories_widget/frozen_food_screen.dart';
+import 'package:categories_widget/medicine_screen.dart';
+import 'package:categories_widget/others.dart';
+import 'package:login_signup_widgets/login.dart';
+import 'package:login_signup_widgets/welcome.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: "AIzaSyCwGW_iu-B2JYtq9EhZuUX3idQRWdm5fug",
-      appId: "1:801106562107:android:c34c9e0ba79cb25977201e",
-      messagingSenderId: "801106562107",
-      projectId: "spence-38472",
-    ),
-  );
+  //add here firebaseoptions
   runApp(const MyApp());
 }
 

@@ -1,24 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:muraliapp/categories_widget/card2.dart';
-import 'package:muraliapp/countdowntimer.dart';
-import 'package:muraliapp/home.dart';
+import 'package:categories_widget/card2.dart';
+import 'package:countdowntimer.dart';
+import 'package:home.dart';
 
-class DairyWidget extends StatefulWidget {
-  const DairyWidget({Key? key}) : super(key: key);
+class FrozenFoodWidget extends StatefulWidget {
+  const FrozenFoodWidget({Key? key}) : super(key: key);
 
   @override
-  State<DairyWidget> createState() => _Dairypage();
+  State<FrozenFoodWidget> createState() => _FrozenFoodpage();
 }
 
-class _Dairypage extends State<DairyWidget> {
+class _FrozenFoodpage extends State<FrozenFoodWidget> {
   int number = 0;
   final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
       .collection('users')
       .doc(FirebaseAuth.instance.currentUser!.uid)
       .collection("user_orders")
-      .where('Category', isEqualTo: 'Dairy')
+      .where('Category', isEqualTo: 'Frozen Food')
       .snapshots();
 
   showError(String errormessage) {
@@ -48,7 +48,7 @@ class _Dairypage extends State<DairyWidget> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Dairy',
+          'Frozen Foods',
         ),
         backgroundColor: Colors.orange,
         leading: IconButton(
@@ -110,6 +110,7 @@ class _Dairypage extends State<DairyWidget> {
               ? ListView(
                   children:
                       snapshot.data!.docs.map((DocumentSnapshot document) {
+                    //countdowntimer(FirebaseAuth.instance.currentUser,document.id, data[])
                     Map<String, dynamic> data =
                         document.data()! as Map<String, dynamic>;
                     countdowntimer(

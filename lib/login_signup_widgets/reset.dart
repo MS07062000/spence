@@ -1,7 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:muraliapp/login_signup_widgets/login.dart';
+import 'package:login_signup_widgets/login.dart';
 
 class ResetScreen extends StatefulWidget {
   const ResetScreen({Key? key}) : super(key: key);

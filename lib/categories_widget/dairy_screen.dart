@@ -1,25 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:muraliapp/categories_widget/card2.dart';
-import 'package:muraliapp/countdowntimer.dart';
-import 'package:muraliapp/home.dart';
+import 'package:categories_widget/card2.dart';
+import 'package:countdowntimer.dart';
+import 'package:home.dart';
 
-class BakeryWidget extends StatefulWidget {
-  const BakeryWidget({Key? key}) : super(key: key);
+class DairyWidget extends StatefulWidget {
+  const DairyWidget({Key? key}) : super(key: key);
 
   @override
-  State<BakeryWidget> createState() => _Bakerypage();
+  State<DairyWidget> createState() => _Dairypage();
 }
 
-class _Bakerypage extends State<BakeryWidget> {
-  final FirebaseAuth auth = FirebaseAuth.instance;
+class _Dairypage extends State<DairyWidget> {
   int number = 0;
   final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
       .collection('users')
       .doc(FirebaseAuth.instance.currentUser!.uid)
-      .collection('user_orders')
-      .where('Category', isEqualTo: 'Bakery')
+      .collection("user_orders")
+      .where('Category', isEqualTo: 'Dairy')
       .snapshots();
 
   showError(String errormessage) {
@@ -49,7 +48,7 @@ class _Bakerypage extends State<BakeryWidget> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Bakery',
+          'Dairy',
         ),
         backgroundColor: Colors.orange,
         leading: IconButton(
@@ -92,6 +91,7 @@ class _Bakerypage extends State<BakeryWidget> {
                   color: Colors.orange,
                 ));
           }
+
           List list1 = [];
           List list2 = [];
           snapshot.data!.docs.map((DocumentSnapshot document) {

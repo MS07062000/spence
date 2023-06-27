@@ -1,24 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:muraliapp/categories_widget/card2.dart';
-import 'package:muraliapp/countdowntimer.dart';
-import 'package:muraliapp/home.dart';
+import 'package:categories_widget/card2.dart';
+import 'package:countdowntimer.dart';
+import 'package:home.dart';
 
-class MedicineWidget extends StatefulWidget {
-  const MedicineWidget({Key? key}) : super(key: key);
+class BakeryWidget extends StatefulWidget {
+  const BakeryWidget({Key? key}) : super(key: key);
 
   @override
-  State<MedicineWidget> createState() => _Medicinepage();
+  State<BakeryWidget> createState() => _Bakerypage();
 }
 
-class _Medicinepage extends State<MedicineWidget> {
+class _Bakerypage extends State<BakeryWidget> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
   int number = 0;
   final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance
       .collection('users')
       .doc(FirebaseAuth.instance.currentUser!.uid)
-      .collection("user_orders")
-      .where('Category', isEqualTo: 'Medicine')
+      .collection('user_orders')
+      .where('Category', isEqualTo: 'Bakery')
       .snapshots();
 
   showError(String errormessage) {
@@ -48,7 +49,7 @@ class _Medicinepage extends State<MedicineWidget> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Medicine',
+          'Bakery',
         ),
         backgroundColor: Colors.orange,
         leading: IconButton(
@@ -91,7 +92,6 @@ class _Medicinepage extends State<MedicineWidget> {
                   color: Colors.orange,
                 ));
           }
-
           List list1 = [];
           List list2 = [];
           snapshot.data!.docs.map((DocumentSnapshot document) {
@@ -110,15 +110,15 @@ class _Medicinepage extends State<MedicineWidget> {
               ? ListView(
                   children:
                       snapshot.data!.docs.map((DocumentSnapshot document) {
-                    //countdowntimer(FirebaseAuth.instance.currentUser,document.id, data[])
                     Map<String, dynamic> data =
                         document.data()! as Map<String, dynamic>;
-                    /*countdowntimer(
+                    countdowntimer(
                         FirebaseAuth.instance.currentUser,
                         document.id,
                         data['Expiry Date'],
                         data['Name'],
-                        data['Category']);*/
+                        data['Category'],
+                        1);
                     return Card2Widget(
                       docid: document.id,
                       name: data['Name'],
@@ -139,6 +139,13 @@ class _Medicinepage extends State<MedicineWidget> {
                   ? ListView.builder(
                       itemCount: list1.length,
                       itemBuilder: (BuildContext context, int index) {
+                        countdowntimer(
+                            FirebaseAuth.instance.currentUser,
+                            list1[index]['id'],
+                            list1[index]['Expiry Date'],
+                            list1[index]['Name'],
+                            list1[index]['Category'],
+                            1);
                         return Card2Widget(
                           docid: list1[index]['id'],
                           name: list1[index]['Name'],

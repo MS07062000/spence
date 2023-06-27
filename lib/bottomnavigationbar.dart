@@ -3,20 +3,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:muraliapp/addproductpage.dart';
-import 'package:muraliapp/categories_widget/bakery_screen.dart';
-import 'package:muraliapp/categories_widget/condiments.dart';
-import 'package:muraliapp/categories_widget/dairy_screen.dart';
-import 'package:muraliapp/categories_widget/frozen_food_screen.dart';
-import 'package:muraliapp/categories_widget/medicine_screen.dart';
-import 'package:muraliapp/categories_widget/others.dart';
-import 'package:muraliapp/expiringsoon.dart';
-import 'package:muraliapp/garbagereport.dart';
-import 'package:muraliapp/home.dart';
-import 'package:muraliapp/login_signup_widgets/login.dart';
-import 'package:muraliapp/login_signup_widgets/welcome.dart';
-import 'package:muraliapp/notification_tab_widgets/notificationpage.dart';
-import 'package:muraliapp/notificationapi.dart';
+import 'package:addproductpage.dart';
+import 'package:categories_widget/bakery_screen.dart';
+import 'package:categories_widget/condiments.dart';
+import 'package:categories_widget/dairy_screen.dart';
+import 'package:categories_widget/frozen_food_screen.dart';
+import 'package:categories_widget/medicine_screen.dart';
+import 'package:categories_widget/others.dart';
+import 'package:expiringsoon.dart';
+import 'package:garbagereport.dart';
+import 'package:home.dart';
+import 'package:login_signup_widgets/login.dart';
+import 'package:login_signup_widgets/welcome.dart';
+import 'package:notification_tab_widgets/notificationpage.dart';
+import 'package:notificationapi.dart';
 
 /// This is the stateful widget that the main application instantiates.
 // ignore: must_be_immutable

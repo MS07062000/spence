@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:muraliapp/home.dart';
-import 'package:muraliapp/notification_tab_widgets/card3.dart';
-import 'package:muraliapp/notification_tab_widgets/countdowntimer2.dart';
+import 'package:home.dart';
+import 'package:notification_tab_widgets/card3.dart';
+import 'package:notification_tab_widgets/countdowntimer2.dart';
 
 class notificationpageWidget extends StatefulWidget {
   const notificationpageWidget({Key? key}) : super(key: key);

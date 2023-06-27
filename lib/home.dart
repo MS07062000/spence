@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:muraliapp/card_widget.dart';
-import 'package:muraliapp/categories_widget/bakery_screen.dart';
-import 'package:muraliapp/categories_widget/condiments.dart';
-import 'package:muraliapp/categories_widget/dairy_screen.dart';
-import 'package:muraliapp/categories_widget/frozen_food_screen.dart';
-import 'package:muraliapp/categories_widget/medicine_screen.dart';
-import 'package:muraliapp/categories_widget/others.dart';
+import 'package:card_widget.dart';
+import 'package:categories_widget/bakery_screen.dart';
+import 'package:categories_widget/condiments.dart';
+import 'package:categories_widget/dairy_screen.dart';
+import 'package:categories_widget/frozen_food_screen.dart';
+import 'package:categories_widget/medicine_screen.dart';
+import 'package:categories_widget/others.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:muraliapp/countdowntimer.dart';
-import 'package:muraliapp/login_signup_widgets/login.dart';
+import 'package:countdowntimer.dart';
+import 'package:login_signup_widgets/login.dart';
 
 class HomepageWidget extends StatefulWidget {
   const HomepageWidget({Key? key}) : super(key: key);

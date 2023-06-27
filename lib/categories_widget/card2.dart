@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:muraliapp/notificationapi.dart';
-import 'package:muraliapp/updateproductpage.dart';
+import 'package:notificationapi.dart';
+import 'package:updateproductpage.dart';
 
 class Card2Widget extends StatefulWidget {
   final String docid;
